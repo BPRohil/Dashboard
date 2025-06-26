@@ -1,15 +1,10 @@
-/**
- * Dashboard Bapenda - Object Oriented JavaScript
- * Sistem Dashboard untuk Pajak PBB dan BPHTB 2025
- */
-
 class DashboardBapenda {
     constructor() {
         this.currentSlide = 0
         this.slides = []
         this.navDots = []
         this.progressBar = null
-        this.slideInterval = 5000 // 5 seconds
+        this.slideInterval = 10000 // 10 seconds
         this.autoSlideTimer = null
         this.isPlaying = true
         this.pbbChart = null
@@ -22,6 +17,22 @@ class DashboardBapenda {
         this.endX = 0
         this.endY = 0
 
+        // Marquee properties
+        this.marqueeMessages = [
+            {
+                icon: "fas fa-bullhorn",
+                text: "Selamat datang di Badan Pendapatan Daerah (BAPENDA) Kabupaten Rokan Hilir",
+            },
+            {
+                icon: "fas fa-info-circle",
+                text: "Periode pelaporan: Januari - Juni 2025",
+            },
+            {
+                icon: "fas fa-globe",
+                text: "Hubungi Kami di: bapenda.rohil@gmail.com  |  Facebook: Bapenda Rohil  |  Instagram: bapenda_rohil",
+            },
+        ]
+
         this.init()
     }
 
@@ -30,6 +41,7 @@ class DashboardBapenda {
         this.initEventListeners()
         this.initLoadingScreen()
         this.initTimeUpdater()
+        this.initMarquee()
         this.createCharts()
         this.showSlide(0)
         this.startAutoSlide()
@@ -39,6 +51,44 @@ class DashboardBapenda {
         this.slides = document.querySelectorAll(".slide")
         this.navDots = document.querySelectorAll(".fixed.bottom-8 > div")
         this.progressBar = document.getElementById("progressBar")
+    }
+
+    initMarquee() {
+        this.updateMarqueeContent()
+    }
+
+    updateMarqueeContent(customMessages = null) {
+        const messages = customMessages || this.marqueeMessages
+        const marqueeContent = document.querySelector(".marquee-content")
+
+        if (marqueeContent) {
+            marqueeContent.innerHTML = messages
+                .map(
+                    (msg) =>
+                        `<span class="mx-8">
+                    <i class="${msg.icon} mr-2"></i>
+                    ${msg.text}
+                </span>`
+                )
+                .join("")
+        }
+    }
+
+    addMarqueeMessage(icon, text) {
+        this.marqueeMessages.push({ icon, text })
+        this.updateMarqueeContent()
+    }
+
+    removeMarqueeMessage(index) {
+        if (index >= 0 && index < this.marqueeMessages.length) {
+            this.marqueeMessages.splice(index, 1)
+            this.updateMarqueeContent()
+        }
+    }
+
+    setMarqueeMessages(newMessages) {
+        this.marqueeMessages = newMessages
+        this.updateMarqueeContent()
     }
 
     initEventListeners() {
