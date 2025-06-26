@@ -228,7 +228,7 @@ class DashboardBapenda {
             datasets: [
                 {
                     label: "PBB (Juta Rupiah)",
-                    data: [845, 149, 168, 93, 208, 461],
+                    data: [845, 149, 168, 93, 208, 710],
                     backgroundColor: "rgba(59, 130, 246, 0.1)",
                     borderColor: "#f6803b",
                     borderWidth: 3,
@@ -250,7 +250,7 @@ class DashboardBapenda {
             datasets: [
                 {
                     label: "BPHTB (Juta Rupiah)",
-                    data: [159, 697, 504, 417, 480, 294],
+                    data: [159, 697, 504, 417, 480, 491],
                     backgroundColor: "rgba(59, 130, 246, 0.1)",
                     borderColor: "#f6803b",
                     borderWidth: 3,
