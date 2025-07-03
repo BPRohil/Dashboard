@@ -193,7 +193,16 @@ class DashboardBapenda {
     getOptimizedChartOptions() {
         return {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
+            aspectRatio: 2.5,
+            layout: {
+                padding: {
+                    top: 20,
+                    right: 20,
+                    bottom: 20,
+                    left: 20,
+                },
+            },
             interaction: {
                 intersect: false,
                 mode: "index",
@@ -333,12 +342,21 @@ class DashboardBapenda {
             },
             elements: {
                 point: {
+                    radius: 6,
                     hoverRadius: 10,
                     hoverBorderWidth: 3,
+                    borderWidth: 2,
+                    hitRadius: 10,
                 },
                 line: {
                     tension: 0.4,
+                    borderWidth: 3,
+                    fill: true,
                 },
+            },
+            onResize: (chart, size) => {
+                // Ensure chart maintains proper scaling on zoom changes
+                chart.update("none")
             },
         }
     }
@@ -386,6 +404,8 @@ class DashboardBapenda {
                         shadowOffsetY: 3,
                         shadowBlur: 10,
                         shadowColor: "rgba(59, 130, 246, 0.3)",
+                        cubicInterpolationMode: "monotone",
+                        spanGaps: false,
                     },
                 ],
             },
@@ -419,6 +439,8 @@ class DashboardBapenda {
                         shadowOffsetY: 3,
                         shadowBlur: 10,
                         shadowColor: "rgba(16, 185, 129, 0.3)",
+                        cubicInterpolationMode: "monotone",
+                        spanGaps: false,
                     },
                 ],
             },
@@ -433,6 +455,13 @@ class DashboardBapenda {
             // Create PBB Chart
             const pbbCtx = document.getElementById("pbbChart")?.getContext("2d")
             if (pbbCtx) {
+                // Ensure canvas is properly sized before creating chart
+                const pbbCanvas = document.getElementById("pbbChart")
+                if (pbbCanvas) {
+                    pbbCanvas.style.height = "100%"
+                    pbbCanvas.style.width = "100%"
+                }
+
                 this.charts.pbb = new Chart(pbbCtx, {
                     type: "line",
                     data: chartData.pbb,
@@ -458,6 +487,13 @@ class DashboardBapenda {
                 .getElementById("bphtbChart")
                 ?.getContext("2d")
             if (bphtbCtx) {
+                // Ensure canvas is properly sized before creating chart
+                const bphtbCanvas = document.getElementById("bphtbChart")
+                if (bphtbCanvas) {
+                    bphtbCanvas.style.height = "100%"
+                    bphtbCanvas.style.width = "100%"
+                }
+
                 this.charts.bphtb = new Chart(bphtbCtx, {
                     type: "line",
                     data: chartData.bphtb,
@@ -477,6 +513,18 @@ class DashboardBapenda {
                     plugins: [ChartDataLabels],
                 })
             }
+
+            // Add window resize event listener to update charts
+            window.addEventListener("resize", () => {
+                if (this.charts.pbb) this.charts.pbb.resize()
+                if (this.charts.bphtb) this.charts.bphtb.resize()
+            })
+
+            // Force an initial resize to ensure proper rendering
+            setTimeout(() => {
+                if (this.charts.pbb) this.charts.pbb.resize()
+                if (this.charts.bphtb) this.charts.bphtb.resize()
+            }, 100)
         } catch (error) {
             console.error("Chart creation failed:", error)
         }

@@ -13,6 +13,28 @@
         />
         <script src="tailwind-config.js"></script>
         <link rel="stylesheet" href="styles.css" />
+        <style>
+            .chart-container {
+                position: relative !important;
+                height: 400px !important;
+                min-height: 300px !important;
+                width: 100% !important;
+            }
+            .chart-container canvas {
+                display: block !important;
+                box-sizing: border-box !important;
+                height: 100% !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                max-height: 100% !important;
+            }
+            @media (max-width: 768px) {
+                .chart-container {
+                    height: 300px !important;
+                    min-height: 250px !important;
+                }
+            }
+        </style>
     </head>
     <body class="font-sans bg-white h-screen overflow-hidden">
         <!-- Loading Screen -->
@@ -237,8 +259,9 @@
                 </div>
                 <div
                     class="chart-container bg-white border border-gray-200 rounded-3xl p-6 mb-8 max-w-5xl w-full shadow-sm"
+                    style="position: relative; height: 400px; min-height: 300px;"
                 >
-                    <canvas id="pbbChart"></canvas>
+                    <canvas id="pbbChart" style="display: block; box-sizing: border-box; height: 100%; width: 100%;"></canvas>
                 </div>
                 <div
                     class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 w-full max-w-7xl"
@@ -357,8 +380,9 @@
                 </div>
                 <div
                     class="chart-container bg-white border border-gray-200 rounded-3xl p-6 mb-8 max-w-5xl w-full shadow-sm"
+                    style="position: relative; height: 400px; min-height: 300px;"
                 >
-                    <canvas id="bphtbChart"></canvas>
+                    <canvas id="bphtbChart" style="display: block; box-sizing: border-box; height: 100%; width: 100%;"></canvas>
                 </div>
                 <div
                     class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 w-full max-w-7xl"
