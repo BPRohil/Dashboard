@@ -1,23 +1,30 @@
+/**
+ * BAPENDA Dashboard - Optimized Version
+ * Enhanced with modern JavaScript practices, better performance, and improved maintainability
+ */
+
 class DashboardBapenda {
+    // Static configuration
+    static CONFIG = {
+        SLIDE_INTERVAL: 10000,
+        ANIMATION_DURATION: 300,
+        RESIZE_DEBOUNCE: 250,
+        SWIPE_THRESHOLD: 50,
+        LOADING_DELAY: 1500,
+    }
+
     constructor() {
-        this.currentSlide = 0
-        this.slides = []
-        this.navDots = []
-        this.progressBar = null
-        this.slideInterval = 10000 // 10 seconds
-        this.autoSlideTimer = null
-        this.isPlaying = true
-        this.pbbChart = null
-        this.bphtbChart = null
-        this.resizeTimeout = null
+        this.state = {
+            currentSlide: 0,
+            isPlaying: true,
+            isInitialized: false,
+        }
 
-        // Touch/swipe properties
-        this.startX = 0
-        this.startY = 0
-        this.endX = 0
-        this.endY = 0
+        this.elements = {}
+        this.charts = {}
+        this.timers = {}
+        this.touch = { startX: 0, startY: 0, endX: 0, endY: 0 }
 
-        // Marquee properties
         this.marqueeMessages = [
             {
                 icon: "fas fa-bullhorn",
@@ -29,28 +36,141 @@ class DashboardBapenda {
             },
             {
                 icon: "fas fa-globe",
-                text: "Hubungi Kami di: bapenda.rohil@gmail.com  |  Facebook: Bapenda Rohil  |  Instagram: bapenda_rohil",
+                text: "Hubungi Kami di: bapenda.rohil@gmail.com | Facebook: Bapenda Rohil | Instagram: bapenda_rohil",
             },
         ]
 
         this.init()
     }
 
-    init() {
-        this.initElements()
-        this.initEventListeners()
-        this.initLoadingScreen()
-        this.initTimeUpdater()
-        this.initMarquee()
-        this.createCharts()
+    async init() {
+        try {
+            this.cacheElements()
+            this.setupEventListeners()
+            await this.initializeComponents()
+            this.state.isInitialized = true
+        } catch (error) {
+            console.error("Dashboard initialization failed:", error)
+        }
+    }
+
+    cacheElements() {
+        this.elements = {
+            slides: document.querySelectorAll(".slide"),
+            navDots: document.querySelectorAll(".fixed.bottom-8 > div"),
+            progressBar: document.getElementById("progressBar"),
+            playPauseBtn: document.getElementById("playPauseBtn"),
+            fullscreenBtn: document.getElementById("fullscreenBtn"),
+            currentTime: document.getElementById("currentTime"),
+            loadingScreen: document.getElementById("loadingScreen"),
+            marqueeContent: document.querySelector(".marquee-content"),
+            mainContainer: document.querySelector(".w-screen"),
+        }
+    }
+
+    setupEventListeners() {
+        // Use event delegation and passive listeners where appropriate
+        this.elements.playPauseBtn?.addEventListener("click", () =>
+            this.togglePlayPause()
+        )
+        this.elements.fullscreenBtn?.addEventListener("click", () =>
+            this.toggleFullscreen()
+        )
+
+        // Passive listeners for better performance
+        this.elements.mainContainer?.addEventListener(
+            "mouseenter",
+            () => this.pauseOnHover(),
+            { passive: true }
+        )
+        this.elements.mainContainer?.addEventListener(
+            "mouseleave",
+            () => this.resumeOnLeave(),
+            { passive: true }
+        )
+
+        document.addEventListener("keydown", (e) => this.handleKeyboard(e))
+        document.addEventListener(
+            "touchstart",
+            (e) => this.handleTouchStart(e),
+            { passive: true }
+        )
+        document.addEventListener("touchend", (e) => this.handleTouchEnd(e), {
+            passive: true,
+        })
+
+        // Debounced resize handler
+        window.addEventListener(
+            "resize",
+            this.debounce(
+                () => this.handleResize(),
+                DashboardBapenda.CONFIG.RESIZE_DEBOUNCE
+            )
+        )
+
+        // Fullscreen change handler
+        document.addEventListener("fullscreenchange", () =>
+            this.updateFullscreenButton()
+        )
+    }
+
+    async initializeComponents() {
+        await Promise.all([
+            this.initLoadingScreen(),
+            this.initTimeUpdater(),
+            this.initMarquee(),
+            this.createCharts(),
+        ])
+
         this.showSlide(0)
         this.startAutoSlide()
     }
 
-    initElements() {
-        this.slides = document.querySelectorAll(".slide")
-        this.navDots = document.querySelectorAll(".fixed.bottom-8 > div")
-        this.progressBar = document.getElementById("progressBar")
+    initLoadingScreen() {
+        return new Promise((resolve) => {
+            if (document.readyState === "complete") {
+                this.hideLoadingScreen()
+                resolve()
+            } else {
+                window.addEventListener("load", () => {
+                    setTimeout(() => {
+                        this.hideLoadingScreen()
+                        resolve()
+                    }, DashboardBapenda.CONFIG.LOADING_DELAY)
+                })
+            }
+        })
+    }
+
+    hideLoadingScreen() {
+        const loadingScreen = this.elements.loadingScreen
+        if (loadingScreen) {
+            loadingScreen.style.transition = "opacity 0.5s ease"
+            loadingScreen.style.opacity = "0"
+            setTimeout(() => {
+                loadingScreen.style.display = "none"
+            }, 500)
+        }
+    }
+
+    initTimeUpdater() {
+        this.updateTime()
+        this.timers.timeUpdate = setInterval(() => this.updateTime(), 1000)
+    }
+
+    updateTime() {
+        if (!this.elements.currentTime) return
+
+        const timeString = new Date().toLocaleString("id-ID", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        })
+
+        this.elements.currentTime.textContent = timeString
     }
 
     initMarquee() {
@@ -59,21 +179,517 @@ class DashboardBapenda {
 
     updateMarqueeContent(customMessages = null) {
         const messages = customMessages || this.marqueeMessages
-        const marqueeContent = document.querySelector(".marquee-content")
+        if (!this.elements.marqueeContent) return
 
-        if (marqueeContent) {
-            marqueeContent.innerHTML = messages
-                .map(
-                    (msg) =>
-                        `<span class="mx-8">
-                    <i class="${msg.icon} mr-2"></i>
-                    ${msg.text}
-                </span>`
-                )
-                .join("")
+        this.elements.marqueeContent.innerHTML = messages
+            .map(
+                (msg) =>
+                    `<span class="mx-8"><i class="${msg.icon} mr-2"></i>${msg.text}</span>`
+            )
+            .join("")
+    }
+
+    // Enhanced chart configuration with beautiful styling
+    getOptimizedChartOptions() {
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: "index",
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "top",
+                    labels: {
+                        color: "#1f2937",
+                        font: {
+                            size: 14,
+                            weight: "bold",
+                            family: "Inter, sans-serif",
+                        },
+                        padding: 20,
+                        usePointStyle: true,
+                        pointStyle: "circle",
+                    },
+                },
+                tooltip: {
+                    backgroundColor: "rgba(17, 24, 39, 0.95)",
+                    titleColor: "#f9fafb",
+                    bodyColor: "#f9fafb",
+                    borderColor: "rgba(59, 130, 246, 0.5)",
+                    borderWidth: 2,
+                    cornerRadius: 12,
+                    displayColors: true,
+                    titleFont: { size: 14, weight: "bold" },
+                    bodyFont: { size: 13 },
+                    padding: 12,
+                    caretPadding: 8,
+                    callbacks: {
+                        title: (context) => `${context[0].label} 2025`,
+                        label: (context) =>
+                            `💰 Rp ${context.parsed.y.toLocaleString(
+                                "id-ID"
+                            )} Juta`,
+                        afterLabel: (context) => {
+                            const total = context.dataset.data.reduce(
+                                (a, b) => a + b,
+                                0
+                            )
+                            const percentage = (
+                                (context.parsed.y / total) *
+                                100
+                            ).toFixed(1)
+                            return `📊 ${percentage}% dari total`
+                        },
+                    },
+                },
+                datalabels: {
+                    display: true,
+                    color: "#1f2937",
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    borderColor: "rgba(59, 130, 246, 0.3)",
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    font: {
+                        size: 11,
+                        weight: "bold",
+                        family: "Inter, sans-serif",
+                    },
+                    padding: 4,
+                    anchor: "end",
+                    align: "top",
+                    offset: 4,
+                    formatter: (value) => `${value} Jt`,
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: "rgba(156, 163, 175, 0.2)",
+                        lineWidth: 1,
+                        drawBorder: false,
+                    },
+                    border: {
+                        display: false,
+                    },
+                    ticks: {
+                        color: "#6b7280",
+                        font: {
+                            size: 12,
+                            family: "Inter, sans-serif",
+                        },
+                        padding: 8,
+                        callback: (value) => `${value} Jt`,
+                    },
+                    title: {
+                        display: true,
+                        text: "Penerimaan (Juta Rupiah)",
+                        color: "#374151",
+                        font: {
+                            size: 13,
+                            weight: "bold",
+                            family: "Inter, sans-serif",
+                        },
+                        padding: 10,
+                    },
+                },
+                x: {
+                    grid: {
+                        color: "rgba(156, 163, 175, 0.1)",
+                        lineWidth: 1,
+                        drawBorder: false,
+                    },
+                    border: {
+                        display: false,
+                    },
+                    ticks: {
+                        color: "#6b7280",
+                        font: {
+                            size: 12,
+                            family: "Inter, sans-serif",
+                        },
+                        padding: 8,
+                    },
+                    title: {
+                        display: true,
+                        text: "Bulan",
+                        color: "#374151",
+                        font: {
+                            size: 13,
+                            weight: "bold",
+                            family: "Inter, sans-serif",
+                        },
+                        padding: 10,
+                    },
+                },
+            },
+            animation: {
+                duration: 2500,
+                easing: "easeInOutCubic",
+                delay: (context) => context.dataIndex * 100,
+            },
+            elements: {
+                point: {
+                    hoverRadius: 10,
+                    hoverBorderWidth: 3,
+                },
+                line: {
+                    tension: 0.4,
+                },
+            },
         }
     }
 
+    // Enhanced chart data with beautiful gradients and styling
+    getChartData() {
+        const months = DataConfig.getBulan()
+
+        // Create gradient for PBB chart
+        const createGradient = (ctx, colorStart, colorEnd) => {
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400)
+            gradient.addColorStop(0, colorStart)
+            gradient.addColorStop(1, colorEnd)
+            return gradient
+        }
+
+        return {
+            pbb: {
+                labels: months,
+                datasets: [
+                    {
+                        label: "💰 PBB (Pajak Bumi & Bangunan)",
+                        data: DataConfig.getDataPBB(),
+                        backgroundColor: (context) => {
+                            const ctx = context.chart.ctx
+                            return createGradient(
+                                ctx,
+                                "rgba(16, 185, 129, 0.3)",
+                                "rgba(16, 185, 129, 0.05)"
+                            )
+                        },
+                        borderColor: "#10b981",
+                        borderWidth: 4,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: "#ffffff",
+                        pointBorderColor: "#10b981",
+                        pointBorderWidth: 3,
+                        pointRadius: 7,
+                        pointHoverRadius: 10,
+                        pointHoverBackgroundColor: "#10b981",
+                        pointHoverBorderColor: "#ffffff",
+                        pointHoverBorderWidth: 4,
+                        shadowOffsetX: 3,
+                        shadowOffsetY: 3,
+                        shadowBlur: 10,
+                        shadowColor: "rgba(59, 130, 246, 0.3)",
+                    },
+                ],
+            },
+            bphtb: {
+                labels: months,
+                datasets: [
+                    {
+                        label: "🏠 BPHTB (Bea Perolehan Hak atas Tanah & Bangunan)",
+                        data: DataConfig.getDataBPHTB(),
+                        backgroundColor: (context) => {
+                            const ctx = context.chart.ctx
+                            return createGradient(
+                                ctx,
+                                "rgba(16, 185, 129, 0.3)",
+                                "rgba(16, 185, 129, 0.05)"
+                            )
+                        },
+                        borderColor: "#10b981",
+                        borderWidth: 4,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: "#ffffff",
+                        pointBorderColor: "#10b981",
+                        pointBorderWidth: 3,
+                        pointRadius: 7,
+                        pointHoverRadius: 10,
+                        pointHoverBackgroundColor: "#10b981",
+                        pointHoverBorderColor: "#ffffff",
+                        pointHoverBorderWidth: 4,
+                        shadowOffsetX: 3,
+                        shadowOffsetY: 3,
+                        shadowBlur: 10,
+                        shadowColor: "rgba(16, 185, 129, 0.3)",
+                    },
+                ],
+            },
+        }
+    }
+
+    async createCharts() {
+        const chartData = this.getChartData()
+        const options = this.getOptimizedChartOptions()
+
+        try {
+            // Create PBB Chart
+            const pbbCtx = document.getElementById("pbbChart")?.getContext("2d")
+            if (pbbCtx) {
+                this.charts.pbb = new Chart(pbbCtx, {
+                    type: "line",
+                    data: chartData.pbb,
+                    options: {
+                        ...options,
+                        plugins: {
+                            ...options.plugins,
+                            title: {
+                                display: true,
+                                text: "Grafik Penerimaan PBB 2025",
+                                color: "#374151",
+                                font: { size: 18, weight: "bold" },
+                                padding: 20,
+                            },
+                        },
+                    },
+                    plugins: [ChartDataLabels],
+                })
+            }
+
+            // Create BPHTB Chart
+            const bphtbCtx = document
+                .getElementById("bphtbChart")
+                ?.getContext("2d")
+            if (bphtbCtx) {
+                this.charts.bphtb = new Chart(bphtbCtx, {
+                    type: "line",
+                    data: chartData.bphtb,
+                    options: {
+                        ...options,
+                        plugins: {
+                            ...options.plugins,
+                            title: {
+                                display: true,
+                                text: "Grafik Penerimaan BPHTB 2025",
+                                color: "#374151",
+                                font: { size: 18, weight: "bold" },
+                                padding: 20,
+                            },
+                        },
+                    },
+                    plugins: [ChartDataLabels],
+                })
+            }
+        } catch (error) {
+            console.error("Chart creation failed:", error)
+        }
+    }
+
+    showSlide(index) {
+        if (index < 0 || index >= this.elements.slides.length) return
+
+        // Update slides with better performance
+        this.elements.slides.forEach((slide, i) => {
+            slide.style.opacity = i === index ? "1" : "0"
+            slide.classList.toggle("active", i === index)
+        })
+
+        // Update navigation dots
+        this.elements.navDots.forEach((dot, i) => {
+            dot.className =
+                i === index
+                    ? "w-5 h-5 rounded-full bg-blue-600 text-white cursor-pointer transition-all duration-300 scale-110 shadow-lg hover:shadow-xl"
+                    : "w-5 h-5 rounded-full bg-gray-300 text-gray-600 cursor-pointer transition-all duration-300 hover:bg-blue-500 hover:scale-110 shadow-lg"
+        })
+
+        // Update charts when needed
+        requestAnimationFrame(() => {
+            if (index === 1 && this.charts.pbb) {
+                this.charts.pbb.update("active")
+            } else if (index === 2 && this.charts.bphtb) {
+                this.charts.bphtb.update("active")
+            }
+        })
+
+        this.updateProgressBar()
+    }
+
+    updateProgressBar() {
+        if (!this.elements.progressBar) return
+
+        this.elements.progressBar.style.transition = "width 0.1s ease"
+        this.elements.progressBar.style.width = "0%"
+
+        requestAnimationFrame(() => {
+            this.elements.progressBar.style.transition = "width 10s linear"
+            if (this.state.isPlaying) {
+                this.elements.progressBar.style.width = "100%"
+            }
+        })
+    }
+
+    nextSlide() {
+        this.state.currentSlide =
+            (this.state.currentSlide + 1) % this.elements.slides.length
+        this.showSlide(this.state.currentSlide)
+    }
+
+    goToSlide(index) {
+        this.state.currentSlide = index
+        this.showSlide(this.state.currentSlide)
+        this.resetAutoSlide()
+    }
+
+    startAutoSlide() {
+        this.clearTimer("autoSlide")
+        if (this.state.isPlaying) {
+            this.timers.autoSlide = setInterval(
+                () => this.nextSlide(),
+                DashboardBapenda.CONFIG.SLIDE_INTERVAL
+            )
+        }
+    }
+
+    resetAutoSlide() {
+        this.clearTimer("autoSlide")
+        this.startAutoSlide()
+    }
+
+    togglePlayPause() {
+        this.state.isPlaying = !this.state.isPlaying
+        const icon = this.elements.playPauseBtn?.querySelector("i")
+
+        if (icon) {
+            icon.className = this.state.isPlaying
+                ? "fas fa-pause"
+                : "fas fa-play"
+        }
+
+        if (this.state.isPlaying) {
+            this.startAutoSlide()
+        } else {
+            this.clearTimer("autoSlide")
+        }
+
+        this.updateProgressBar()
+    }
+
+    toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(console.error)
+        } else {
+            document.exitFullscreen().catch(console.error)
+        }
+    }
+
+    updateFullscreenButton() {
+        const icon = this.elements.fullscreenBtn?.querySelector("i")
+        if (icon) {
+            icon.className = document.fullscreenElement
+                ? "fas fa-compress"
+                : "fas fa-expand"
+        }
+    }
+
+    pauseOnHover() {
+        if (this.state.isPlaying) {
+            this.clearTimer("autoSlide")
+        }
+    }
+
+    resumeOnLeave() {
+        if (this.state.isPlaying) {
+            this.startAutoSlide()
+        }
+    }
+
+    handleKeyboard(e) {
+        const actions = {
+            ArrowLeft: () => {
+                this.state.currentSlide =
+                    this.state.currentSlide > 0
+                        ? this.state.currentSlide - 1
+                        : this.elements.slides.length - 1
+                this.goToSlide(this.state.currentSlide)
+            },
+            ArrowRight: () => this.nextSlide(),
+            " ": () => this.nextSlide(),
+            Escape: () =>
+                document.fullscreenElement && document.exitFullscreen(),
+            f: () => this.toggleFullscreen(),
+            F: () => this.toggleFullscreen(),
+            p: () => this.togglePlayPause(),
+            P: () => this.togglePlayPause(),
+        }
+
+        const action = actions[e.key]
+        if (action) {
+            e.preventDefault()
+            action()
+            if (["ArrowRight", " "].includes(e.key)) {
+                this.resetAutoSlide()
+            }
+        }
+    }
+
+    handleTouchStart(e) {
+        this.touch.startX = e.touches[0].clientX
+        this.touch.startY = e.touches[0].clientY
+    }
+
+    handleTouchEnd(e) {
+        this.touch.endX = e.changedTouches[0].clientX
+        this.touch.endY = e.changedTouches[0].clientY
+        this.handleSwipe()
+    }
+
+    handleSwipe() {
+        const diffX = this.touch.startX - this.touch.endX
+        const diffY = this.touch.startY - this.touch.endY
+
+        if (
+            Math.abs(diffX) > Math.abs(diffY) &&
+            Math.abs(diffX) > DashboardBapenda.CONFIG.SWIPE_THRESHOLD
+        ) {
+            if (diffX > 0) {
+                this.nextSlide()
+            } else {
+                this.state.currentSlide =
+                    this.state.currentSlide > 0
+                        ? this.state.currentSlide - 1
+                        : this.elements.slides.length - 1
+                this.goToSlide(this.state.currentSlide)
+            }
+            this.resetAutoSlide()
+        }
+    }
+
+    handleResize() {
+        Object.values(this.charts).forEach((chart) => {
+            if (chart && typeof chart.resize === "function") {
+                chart.resize()
+            }
+        })
+    }
+
+    // Utility methods
+    debounce(func, wait) {
+        let timeout
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout)
+                func(...args)
+            }
+            clearTimeout(timeout)
+            timeout = setTimeout(later, wait)
+        }
+    }
+
+    clearTimer(name) {
+        if (this.timers[name]) {
+            clearInterval(this.timers[name])
+            delete this.timers[name]
+        }
+    }
+
+    // Public API methods
     addMarqueeMessage(icon, text) {
         this.marqueeMessages.push({ icon, text })
         this.updateMarqueeContent()
@@ -91,436 +707,26 @@ class DashboardBapenda {
         this.updateMarqueeContent()
     }
 
-    initEventListeners() {
-        // Control buttons
-        document
-            .getElementById("playPauseBtn")
-            .addEventListener("click", () => this.togglePlayPause())
-        document
-            .getElementById("fullscreenBtn")
-            .addEventListener("click", () => this.toggleFullscreen())
-
-        // Mouse events for pause on hover
-        document
-            .querySelector(".w-screen")
-            .addEventListener("mouseenter", () => this.pauseOnHover())
-        document
-            .querySelector(".w-screen")
-            .addEventListener("mouseleave", () => this.resumeOnLeave())
-
-        // Keyboard navigation
-        document.addEventListener("keydown", (e) => this.handleKeyboard(e))
-
-        // Touch/swipe support
-        document.addEventListener("touchstart", (e) => this.handleTouchStart(e))
-        document.addEventListener("touchend", (e) => this.handleTouchEnd(e))
-
-        // Window resize
-        window.addEventListener("resize", () => this.handleResize())
-    }
-
-    initLoadingScreen() {
-        window.addEventListener("load", () => {
-            setTimeout(() => {
-                const loadingScreen = document.getElementById("loadingScreen")
-                loadingScreen.style.opacity = "0"
-                setTimeout(() => {
-                    loadingScreen.style.display = "none"
-                }, 500)
-            }, 1500)
-        })
-    }
-
-    initTimeUpdater() {
-        this.updateTime()
-        setInterval(() => this.updateTime(), 1000)
-    }
-
-    updateTime() {
-        const now = new Date()
-        const timeString = now.toLocaleString("id-ID", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-        })
-        document.getElementById("currentTime").textContent = timeString
-    }
-
-    getChartOptions() {
-        return {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false,
-                },
-                tooltip: {
-                    backgroundColor: "rgba(0, 0, 0, 0.8)",
-                    titleColor: "white",
-                    bodyColor: "white",
-                    borderColor: "rgba(255, 255, 255, 0.3)",
-                    borderWidth: 1,
-                    cornerRadius: 10,
-                    displayColors: false,
-                    callbacks: {
-                        label: function (context) {
-                            return `Rp ${context.parsed.y} Juta`
-                        },
-                    },
-                },
-                datalabels: {
-                    display: true,
-                    color: "#374151",
-                    font: {
-                        size: 11,
-                        weight: "bold",
-                    },
-                    anchor: "end",
-                    align: "top",
-                    formatter: function (value) {
-                        return value + " Jt"
-                    },
-                },
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: "rgba(156, 163, 175, 0.3)",
-                        lineWidth: 1,
-                    },
-                    ticks: {
-                        color: "#6B7280",
-                        font: {
-                            size: 12,
-                        },
-                        callback: function (value) {
-                            return value + " Jt"
-                        },
-                    },
-                },
-                x: {
-                    grid: {
-                        color: "rgba(156, 163, 175, 0.3)",
-                        lineWidth: 1,
-                    },
-                    ticks: {
-                        color: "#6B7280",
-                        font: {
-                            size: 12,
-                        },
-                    },
-                },
-            },
-            animation: {
-                duration: 2000,
-                easing: "easeInOutQuart",
-            },
-        }
-    }
-
-    getPBBData() {
-        return {
-            labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni"],
-            datasets: [
-                {
-                    label: "PBB (Juta Rupiah)",
-                    data: [845, 149, 168, 93, 208, 710],
-                    backgroundColor: "rgba(59, 130, 246, 0.1)",
-                    borderColor: "#f6803b",
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: "rgba(16, 185, 129, 1)",
-                    pointBorderColor: "#ffffff",
-                    pointBorderWidth: 2,
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                },
-            ],
-        }
-    }
-
-    getBPHTBData() {
-        return {
-            labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni"],
-            datasets: [
-                {
-                    label: "BPHTB (Juta Rupiah)",
-                    data: [159, 697, 504, 417, 480, 491],
-                    backgroundColor: "rgba(59, 130, 246, 0.1)",
-                    borderColor: "#f6803b",
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: "rgba(16, 185, 129, 1)",
-                    pointBorderColor: "#ffffff",
-                    pointBorderWidth: 2,
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                },
-            ],
-        }
-    }
-
-    createCharts() {
-        this.createPBBChart()
-        this.createBPHTBChart()
-    }
-
-    createPBBChart() {
-        const pbbCtx = document.getElementById("pbbChart").getContext("2d")
-        const chartOptions = this.getChartOptions()
-
-        this.pbbChart = new Chart(pbbCtx, {
-            type: "line",
-            data: this.getPBBData(),
-            options: {
-                ...chartOptions,
-                plugins: {
-                    ...chartOptions.plugins,
-                    title: {
-                        display: true,
-                        text: "Grafik Penerimaan PBB 2025",
-                        color: "#374151",
-                        font: {
-                            size: 18,
-                            weight: "bold",
-                        },
-                        padding: 20,
-                    },
-                },
-            },
-            plugins: [ChartDataLabels],
-        })
-    }
-
-    createBPHTBChart() {
-        const bphtbCtx = document.getElementById("bphtbChart").getContext("2d")
-        const chartOptions = this.getChartOptions()
-
-        this.bphtbChart = new Chart(bphtbCtx, {
-            type: "line",
-            data: this.getBPHTBData(),
-            options: {
-                ...chartOptions,
-                plugins: {
-                    ...chartOptions.plugins,
-                    title: {
-                        display: true,
-                        text: "Grafik Penerimaan BPHTB 2025",
-                        color: "#374151",
-                        font: {
-                            size: 18,
-                            weight: "bold",
-                        },
-                        padding: 20,
-                    },
-                },
-            },
-            plugins: [ChartDataLabels],
-        })
-    }
-
-    showSlide(index) {
-        // Hide all slides
-        this.slides.forEach((slide, i) => {
-            slide.classList.remove("opacity-100")
-            slide.classList.add("opacity-0")
-            if (i === index) {
-                slide.classList.add("active")
-            } else {
-                slide.classList.remove("active")
-            }
-        })
-
-        // Update navigation dots
-        this.navDots.forEach((dot, i) => {
-            dot.classList.remove("bg-blue-600", "text-white", "scale-110")
-            dot.classList.add("bg-gray-300", "text-gray-600")
-            if (i === index) {
-                dot.classList.remove("bg-gray-300", "text-gray-600")
-                dot.classList.add("bg-blue-600", "text-white", "scale-110")
-            }
-        })
-
-        // Show current slide with enhanced transition
-        setTimeout(() => {
-            this.slides[index].classList.remove("opacity-0")
-            this.slides[index].classList.add("opacity-100")
-        }, 50)
-
-        // Update charts when slides become active
-        setTimeout(() => {
-            if (index === 1 && this.pbbChart) {
-                this.pbbChart.update("active")
-            } else if (index === 2 && this.bphtbChart) {
-                this.bphtbChart.update("active")
-            }
-        }, 300)
-
-        // Reset and start progress bar
-        this.progressBar.classList.add("reset")
-        this.progressBar.style.width = "0%"
-        setTimeout(() => {
-            this.progressBar.classList.remove("reset")
-            if (this.isPlaying) {
-                this.progressBar.style.width = "100%"
-            }
-        }, 150)
-    }
-
-    nextSlide() {
-        this.currentSlide = (this.currentSlide + 1) % this.slides.length
-        this.showSlide(this.currentSlide)
-    }
-
-    goToSlide(index) {
-        this.currentSlide = index
-        this.showSlide(this.currentSlide)
-        this.resetAutoSlide()
-    }
-
-    startAutoSlide() {
-        clearInterval(this.autoSlideTimer) // Always clear existing timer
-        if (this.isPlaying) {
-            this.autoSlideTimer = setInterval(
-                () => this.nextSlide(),
-                this.slideInterval
-            )
-        }
-    }
-
-    resetAutoSlide() {
-        clearInterval(this.autoSlideTimer)
-        this.startAutoSlide()
-    }
-
-    togglePlayPause() {
-        this.isPlaying = !this.isPlaying
-        const btn = document.getElementById("playPauseBtn")
-        const icon = btn.querySelector("i")
-
-        if (this.isPlaying) {
-            icon.className = "fas fa-pause"
-            this.startAutoSlide()
-            this.progressBar.style.animationPlayState = "running"
-        } else {
-            icon.className = "fas fa-play"
-            clearInterval(this.autoSlideTimer)
-            this.progressBar.style.animationPlayState = "paused"
-        }
-    }
-
-    toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen()
-            document
-                .getElementById("fullscreenBtn")
-                .querySelector("i").className = "fas fa-compress"
-        } else {
-            document.exitFullscreen()
-            document
-                .getElementById("fullscreenBtn")
-                .querySelector("i").className = "fas fa-expand"
-        }
-    }
-
-    pauseOnHover() {
-        if (this.isPlaying) {
-            clearInterval(this.autoSlideTimer)
-            this.progressBar.style.animationPlayState = "paused"
-        }
-    }
-
-    resumeOnLeave() {
-        if (this.isPlaying) {
-            this.startAutoSlide()
-            this.progressBar.style.animationPlayState = "running"
-        }
-    }
-
-    handleKeyboard(e) {
-        switch (e.key) {
-            case "ArrowLeft":
-                this.currentSlide =
-                    this.currentSlide > 0
-                        ? this.currentSlide - 1
-                        : this.slides.length - 1
-                this.goToSlide(this.currentSlide)
-                break
-            case "ArrowRight":
-            case " ":
-                this.nextSlide()
-                this.resetAutoSlide()
-                break
-            case "Escape":
-                if (document.fullscreenElement) {
-                    document.exitFullscreen()
-                }
-                break
-            case "f":
-            case "F":
-                this.toggleFullscreen()
-                break
-            case "p":
-            case "P":
-                this.togglePlayPause()
-                break
-        }
-    }
-
-    handleTouchStart(e) {
-        this.startX = e.touches[0].clientX
-        this.startY = e.touches[0].clientY
-    }
-
-    handleTouchEnd(e) {
-        this.endX = e.changedTouches[0].clientX
-        this.endY = e.changedTouches[0].clientY
-        this.handleSwipe()
-    }
-
-    handleSwipe() {
-        const threshold = 50
-        const diffX = this.startX - this.endX
-        const diffY = this.startY - this.endY
-
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
-            if (diffX > 0) {
-                this.nextSlide()
-            } else {
-                this.currentSlide =
-                    this.currentSlide > 0
-                        ? this.currentSlide - 1
-                        : this.slides.length - 1
-                this.goToSlide(this.currentSlide)
-            }
-            this.resetAutoSlide()
-        }
-    }
-
-    handleResize() {
-        clearTimeout(this.resizeTimeout)
-        this.resizeTimeout = setTimeout(() => {
-            // Resize charts
-            if (this.pbbChart) this.pbbChart.resize()
-            if (this.bphtbChart) this.bphtbChart.resize()
-        }, 250)
+    // Cleanup method
+    destroy() {
+        Object.values(this.timers).forEach((timer) => clearInterval(timer))
+        Object.values(this.charts).forEach((chart) => chart?.destroy())
+        this.timers = {}
+        this.charts = {}
     }
 }
 
-// Global functions for navigation (called from HTML onclick)
+// Global functions for navigation (backward compatibility)
 function goToSlide(index) {
-    if (window.dashboardInstance) {
-        window.dashboardInstance.goToSlide(index)
-    }
+    window.dashboardInstance?.goToSlide(index)
 }
 
 // Initialize dashboard when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
     window.dashboardInstance = new DashboardBapenda()
+})
+
+// Cleanup on page unload
+window.addEventListener("beforeunload", () => {
+    window.dashboardInstance?.destroy()
 })
