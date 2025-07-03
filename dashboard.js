@@ -122,8 +122,97 @@ class DashboardBapenda {
             this.createCharts(),
         ])
 
-        this.showSlide(0)
-        this.startAutoSlide()
+        // Pastikan elements sudah tersedia sebelum memulai slide
+        if (this.elements.slides && this.elements.slides.length > 0) {
+            this.showSlide(0)
+            // Tambahkan delay untuk memastikan DOM sudah siap
+            setTimeout(() => {
+                this.startAutoSlide()
+            }, 100)
+        }
+    }
+
+    startAutoSlide() {
+        this.clearTimer("autoSlide")
+
+        // Validasi state dan elements sebelum memulai
+        if (
+            this.state.isPlaying &&
+            this.elements.slides &&
+            this.elements.slides.length > 0
+        ) {
+            this.timers.autoSlide = setInterval(() => {
+                // Double check sebelum next slide
+                if (this.state.isPlaying && this.state.isInitialized) {
+                    this.nextSlide()
+                }
+            }, DashboardBapenda.CONFIG.SLIDE_INTERVAL)
+        }
+    }
+
+    showSlide(index) {
+        if (index < 0 || index >= this.elements.slides.length) return
+
+        // Update slides dengan validasi tambahan
+        this.elements.slides.forEach((slide, i) => {
+            if (slide) {
+                slide.style.opacity = i === index ? "1" : "0"
+                slide.classList.toggle("active", i === index)
+            }
+        })
+
+        // Update navigation dots dengan validasi
+        if (this.elements.navDots && this.elements.navDots.length > 0) {
+            this.elements.navDots.forEach((dot, i) => {
+                if (dot) {
+                    dot.className =
+                        i === index
+                            ? "w-5 h-5 rounded-full bg-blue-600 text-white cursor-pointer transition-all duration-300 scale-110 shadow-lg hover:shadow-xl"
+                            : "w-5 h-5 rounded-full bg-gray-300 text-gray-600 cursor-pointer transition-all duration-300 hover:bg-blue-500 hover:scale-110 shadow-lg"
+                }
+            })
+        }
+
+        // Update charts when needed
+        requestAnimationFrame(() => {
+            if (index === 1 && this.charts.pbb) {
+                this.charts.pbb.update("active")
+            } else if (index === 2 && this.charts.bphtb) {
+                this.charts.bphtb.update("active")
+            }
+        })
+
+        this.updateProgressBar()
+    }
+
+    updateProgressBar() {
+        if (!this.elements.progressBar) return
+
+        // Force stop any existing animation and reset
+        this.elements.progressBar.style.transition = "none"
+        this.elements.progressBar.style.width = "0%"
+
+        // Force reflow to ensure the reset is applied
+        this.elements.progressBar.offsetHeight
+
+        // Gunakan timeout yang lebih stabil
+        setTimeout(() => {
+            if (this.state.isPlaying && this.state.isInitialized) {
+                this.elements.progressBar.style.transition = `width ${DashboardBapenda.CONFIG.SLIDE_INTERVAL}ms linear`
+                this.elements.progressBar.style.width = "100%"
+            } else {
+                this.elements.progressBar.style.transition = "width 0.1s ease"
+                this.elements.progressBar.style.width = "0%"
+            }
+        }, 100) // Tingkatkan delay untuk stabilitas
+    }
+
+    resetAutoSlide() {
+        this.clearTimer("autoSlide")
+        // Tambahkan delay kecil sebelum restart untuk mencegah konflik
+        setTimeout(() => {
+            this.startAutoSlide()
+        }, 50)
     }
 
     initLoadingScreen() {
@@ -194,13 +283,13 @@ class DashboardBapenda {
         return {
             responsive: true,
             maintainAspectRatio: true,
-            aspectRatio: 2.5,
+            aspectRatio: 1,
             layout: {
                 padding: {
-                    top: 20,
-                    right: 20,
-                    bottom: 20,
-                    left: 20,
+                    top: 25,
+                    right: 15,
+                    bottom: 10,
+                    left: 15,
                 },
             },
             interaction: {
@@ -218,7 +307,7 @@ class DashboardBapenda {
                             weight: "bold",
                             family: "Inter, sans-serif",
                         },
-                        padding: 20,
+                        padding: 4,
                         usePointStyle: true,
                         pointStyle: "circle",
                     },
@@ -233,7 +322,7 @@ class DashboardBapenda {
                     displayColors: true,
                     titleFont: { size: 14, weight: "bold" },
                     bodyFont: { size: 13 },
-                    padding: 12,
+                    padding: 8,
                     caretPadding: 8,
                     callbacks: {
                         title: (context) => `${context[0].label} 2025`,
@@ -262,14 +351,15 @@ class DashboardBapenda {
                     borderWidth: 1,
                     borderRadius: 6,
                     font: {
-                        size: 11,
+                        size: 12,
                         weight: "bold",
                         family: "Inter, sans-serif",
                     },
-                    padding: 4,
-                    anchor: "end",
+                    padding: 6,
+                    anchor: "center",
                     align: "top",
-                    offset: 4,
+                    offset: 8,
+                    clip: false,
                     formatter: (value) => `${value} Jt`,
                 },
             },
@@ -290,7 +380,7 @@ class DashboardBapenda {
                             size: 12,
                             family: "Inter, sans-serif",
                         },
-                        padding: 8,
+                        padding: 4,
                         callback: (value) => `${value} Jt`,
                     },
                     title: {
@@ -317,22 +407,22 @@ class DashboardBapenda {
                     ticks: {
                         color: "#6b7280",
                         font: {
-                            size: 12,
+                            size: 16,
                             family: "Inter, sans-serif",
                         },
-                        padding: 8,
+                        padding: 12,
                     },
-                    title: {
-                        display: true,
-                        text: "Bulan",
-                        color: "#374151",
-                        font: {
-                            size: 13,
-                            weight: "bold",
-                            family: "Inter, sans-serif",
-                        },
-                        padding: 10,
-                    },
+                    // title: {
+                    //     display: true,
+                    //     text: "Bulan",
+                    //     color: "#374151",
+                    //     font: {
+                    //         size: 13,
+                    //         weight: "bold",
+                    //         family: "Inter, sans-serif",
+                    //     },
+                    //     padding: 10,
+                    // },
                 },
             },
             animation: {
@@ -378,7 +468,7 @@ class DashboardBapenda {
                 labels: months,
                 datasets: [
                     {
-                        label: "💰 PBB (Pajak Bumi & Bangunan)",
+                        label: "💰 PBB(Pajak Bumi & Bangunan)",
                         data: DataConfig.getDataPBB(),
                         backgroundColor: (context) => {
                             const ctx = context.chart.ctx
@@ -389,7 +479,7 @@ class DashboardBapenda {
                             )
                         },
                         borderColor: "#10b981",
-                        borderWidth: 4,
+                        borderWidth: 6,
                         fill: true,
                         tension: 0.4,
                         pointBackgroundColor: "#ffffff",
@@ -474,7 +564,7 @@ class DashboardBapenda {
                                 text: "Grafik Penerimaan PBB 2025",
                                 color: "#374151",
                                 font: { size: 18, weight: "bold" },
-                                padding: 20,
+                                padding: 10,
                             },
                         },
                     },
@@ -506,7 +596,7 @@ class DashboardBapenda {
                                 text: "Grafik Penerimaan BPHTB 2025",
                                 color: "#374151",
                                 font: { size: 18, weight: "bold" },
-                                padding: 20,
+                                padding: 10,
                             },
                         },
                     },
@@ -562,15 +652,23 @@ class DashboardBapenda {
     updateProgressBar() {
         if (!this.elements.progressBar) return
 
-        this.elements.progressBar.style.transition = "width 0.1s ease"
+        // Force stop any existing animation and reset
+        this.elements.progressBar.style.transition = "none"
         this.elements.progressBar.style.width = "0%"
 
-        requestAnimationFrame(() => {
-            this.elements.progressBar.style.transition = "width 10s linear"
+        // Force reflow to ensure the reset is applied
+        this.elements.progressBar.offsetHeight
+
+        // Use setTimeout instead of requestAnimationFrame for better timing control
+        setTimeout(() => {
             if (this.state.isPlaying) {
+                this.elements.progressBar.style.transition = `width ${DashboardBapenda.CONFIG.SLIDE_INTERVAL}ms linear`
                 this.elements.progressBar.style.width = "100%"
+            } else {
+                this.elements.progressBar.style.transition = "width 0.1s ease"
+                this.elements.progressBar.style.width = "0%"
             }
-        })
+        }, 50)
     }
 
     nextSlide() {
@@ -771,8 +869,20 @@ function goToSlide(index) {
 
 // Initialize dashboard when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
-    window.dashboardInstance = new DashboardBapenda()
+    // Pastikan DOM benar-benar siap
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initDashboard)
+    } else {
+        initDashboard()
+    }
 })
+
+function initDashboard() {
+    // Tambahkan delay kecil untuk memastikan semua elements sudah di-render
+    setTimeout(() => {
+        window.dashboardInstance = new DashboardBapenda()
+    }, 50)
+}
 
 // Cleanup on page unload
 window.addEventListener("beforeunload", () => {
