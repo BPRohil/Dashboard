@@ -355,55 +355,7 @@
                 ></div>
             </div>
 
-            <!-- Audio Player Melayu di pojok bawah -->
-            <!-- Audio Player Melayu di pojok bawah dengan tombol show/hide -->
-            <div
-                id="audioPlayerContainer"
-                style="position: fixed; right: 16px; bottom: 16px; z-index: 60"
-            >
-                <button
-                    id="toggleAudioBtn"
-                    onclick="toggleAudioPlayer()"
-                    style="
-                        background: white;
-                        border-radius: 50%;
-                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-                        border: 1px solid #e5e7eb;
-                        width: 36px;
-                        height: 36px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        position: absolute;
-                        right: 0;
-                        bottom: 60px;
-                        z-index: 61;
-                        cursor: pointer;
-                    "
-                >
-                    <i id="audioBtnIcon" class="fas fa-music text-blue-600"></i>
-                </button>
-                <div
-                    id="audioBox"
-                    style="
-                        background: white;
-                        border-radius: 1rem;
-                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-                        padding: 8px 16px;
-                        display: flex;
-                        align-items: center;
-                        transition: opacity 0.3s, visibility 0.3s;
-                    "
-                >
-                    <audio controls autoplay loop muted>
-                        <source
-                            src="https://www.dropbox.com/scl/fi/r5pqtl3f7cd7vaiilikqa/Instrumen-Musik-dan-Lagu-Melayu-Terbaik-Sepanjang-Masa.mp3?rlkey=br825tdnb6zeegf5pvuhrujnh&st=1nkkx0lw&raw=1"
-                            type="audio/mpeg"
-                        />
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
+            <!-- Audio Player Melayu sudah dipindahkan ke bawah icon fullscreen -->
 
             <!-- Control Panel -->
             <div class="fixed top-28 right-4 z-40 flex flex-col gap-2">
@@ -421,103 +373,42 @@
                 >
                     <i class="fas fa-expand"></i>
                 </button>
-                <!-- YouTube Music Player -->
+                <!-- Audio Player Melayu dipindahkan ke bawah icon fullscreen -->
                 <div
-                    class="bg-white border border-gray-200 p-3 rounded-full text-gray-700 hover:bg-gray-50 hover:shadow-lg transition-all duration-300 shadow-sm flex items-center justify-center relative"
-                    title="Music Player"
-                    onclick="showMusicOptions(event)"
+                    id="audioPlayerContainer"
+                    class="bg-white border border-gray-200 p-3 rounded-full text-gray-700 hover:bg-gray-50 hover:shadow-lg transition-all duration-300 shadow-sm relative"
+                    title="Audio Player"
+                    onclick="toggleAudioPlayer()"
                 >
-                    <i id="musicIcon" class="fas fa-music"></i>
+                    <i id="audioBtnIcon" class="fas fa-music text-blue-600"></i>
                     <div
-                        class="youtube-player-container"
+                        id="audioBox"
                         style="
-                            width: 1px;
-                            height: 1px;
-                            overflow: hidden;
+                            background: white;
+                            border-radius: 1rem;
+                            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+                            padding: 8px 16px;
+                            display: none;
                             position: absolute;
-                            opacity: 0;
+                            right: 0;
+                            top: 100%;
+                            margin-top: 10px;
+                            z-index: 100;
+                            width: 300px;
+                            align-items: center;
+                            transition: opacity 0.3s, visibility 0.3s;
                         "
                     >
-                        <iframe
-                            id="youtubePlayer"
-                            src="https://www.youtube.com/embed/As1vmcFLlII?controls=0&showinfo=0&rel=0&autoplay=0&loop=1&playlist=As1vmcFLlII&mute=1&enablejsapi=1"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            style="position: absolute"
-                            volume="100"
-                        ></iframe>
-                    </div>
-                    <!-- Menu pilihan musik -->
-                    <div
-                        id="musicOptions"
-                        class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden"
-                        style="top: 100%; transform: translateY(10px)"
-                    >
-                        <div
-                            class="px-4 py-2 text-sm text-gray-700 font-semibold border-b border-gray-100"
-                        >
-                            Pilih Musik
-                        </div>
-                        <button
-                            onclick="changeMusic('As1vmcFLlII', 'Musik Melayu')"
-                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                            <i class="fas fa-music text-green-500 mr-2"></i
-                            >Musik Melayu
-                        </button>
-                        <button
-                            onclick="changeMusic('jfKfPfyJRdk', 'Lofi Music')"
-                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                            <i class="fas fa-music text-blue-500 mr-2"></i>Lofi
-                            Music
-                        </button>
-                        <button
-                            onclick="changeMusic('5qap5aO4i9A', 'Lofi Girl')"
-                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                            <i class="fas fa-music text-pink-500 mr-2"></i>Lofi
-                            Girl
-                        </button>
-                        <button
-                            onclick="changeMusic('DWcJFNfaw9c', 'Chillout Music')"
-                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                            <i class="fas fa-music text-purple-500 mr-2"></i
-                            >Chillout Music
-                        </button>
-                        <button
-                            onclick="changeMusic('n61ULEU7CO0', 'Relaxing Piano')"
-                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                            <i class="fas fa-music text-yellow-500 mr-2"></i
-                            >Relaxing Piano
-                        </button>
-                        <button
-                            onclick="changeMusic('lTRiuFIWV54', 'Epic Music')"
-                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                            <i class="fas fa-music text-red-500 mr-2"></i>Epic
-                            Music
-                        </button>
+                        <audio controls autoplay loop muted style="width: 100%">
+                            <source
+                                src="https://www.dropbox.com/scl/fi/r5pqtl3f7cd7vaiilikqa/Instrumen-Musik-dan-Lagu-Melayu-Terbaik-Sepanjang-Masa.mp3?rlkey=br825tdnb6zeegf5pvuhrujnh&st=1nkkx0lw&raw=1"
+                                type="audio/mpeg"
+                            />
+                            Your browser does not support the audio element.
+                        </audio>
                     </div>
                 </div>
-                <button
-                    id="toggleMusicBtn"
-                    class="bg-white border border-gray-200 p-3 rounded-full text-gray-700 hover:bg-gray-50 hover:shadow-lg transition-all duration-300 shadow-sm relative overflow-hidden"
-                    onclick="toggleMusic()"
-                    title="Play/Pause Music"
-                >
-                    <i class="fas fa-play"></i>
-                    <span
-                        class="absolute inset-0 bg-blue-100 opacity-0 transition-opacity duration-300 rounded-full"
-                        id="musicPlayingEffect"
-                    ></span>
-                </button>
             </div>
-
-            <!-- YouTube API -->
-            <script src="https://www.youtube.com/iframe_api"></script>
 
             <!-- Script untuk show/hide audio player -->
             <script>
@@ -547,259 +438,6 @@
                         "visible"
                     document.getElementById("audioBox").style.opacity = "1"
                 })
-            </script>
-
-            <!-- Script untuk mengontrol YouTube Player -->
-            <script>
-                // Variabel untuk menyimpan ID video dan judul musik yang sedang aktif
-                let currentMusicId = "As1vmcFLlII"
-                let currentMusicTitle = "Musik Melayu"
-                let youtubePlayer
-
-                // Inisialisasi YouTube API
-                function onYouTubeIframeAPIReady() {
-                    youtubePlayer = new YT.Player("youtubePlayer", {
-                        events: {
-                            onReady: onPlayerReady,
-                            onStateChange: onPlayerStateChange,
-                        },
-                    })
-                }
-
-                function onPlayerReady(event) {
-                    console.log("YouTube player siap")
-                }
-
-                function onPlayerStateChange(event) {
-                    console.log("Status player berubah:", event.data)
-                }
-
-                function toggleMusic() {
-                    const btn = document.getElementById("toggleMusicBtn")
-                    const icon = btn.querySelector("i")
-                    const musicIcon = document.getElementById("musicIcon")
-                    const playingEffect =
-                        document.getElementById("musicPlayingEffect")
-
-                    // Cek apakah YouTube API sudah siap
-                    if (
-                        !youtubePlayer ||
-                        typeof youtubePlayer.getPlayerState !== "function"
-                    ) {
-                        console.log(
-                            "YouTube API belum siap, mencoba cara alternatif"
-                        )
-                        // Cara alternatif jika API belum siap
-                        const player = document.getElementById("youtubePlayer")
-                        const currentSrc = player.src
-                        const isPlaying = currentSrc.includes("autoplay=1")
-
-                        if (isPlaying) {
-                            player.src = currentSrc
-                                .replace("autoplay=1", "autoplay=0")
-                                .replace("mute=0", "mute=1")
-                            updateUIForPaused()
-                        } else {
-                            player.src = currentSrc
-                                .replace("autoplay=0", "autoplay=1")
-                                .replace("mute=1", "mute=0")
-                            updateUIForPlaying()
-                        }
-                        return
-                    }
-
-                    // Menggunakan YouTube API
-                    try {
-                        const playerState = youtubePlayer.getPlayerState()
-                        console.log("Status player:", playerState)
-
-                        // YT.PlayerState: -1 (unstarted), 0 (ended), 1 (playing), 2 (paused), 3 (buffering), 5 (video cued)
-                        if (playerState === YT.PlayerState.PLAYING) {
-                            // Jika sedang diputar, pause
-                            youtubePlayer.pauseVideo()
-                            updateUIForPaused()
-                        } else {
-                            // Jika tidak diputar, mulai putar
-                            youtubePlayer.playVideo()
-                            youtubePlayer.unMute()
-                            youtubePlayer.setVolume(100)
-                            updateUIForPlaying()
-                        }
-                    } catch (e) {
-                        console.error("Error mengontrol YouTube player:", e)
-                    }
-
-                    // Fungsi untuk memperbarui UI saat musik diputar
-                    function updateUIForPlaying() {
-                        icon.className = "fas fa-pause"
-                        musicIcon.className = "fas fa-music"
-                        musicIcon.style.animation = "pulse 1s infinite"
-                        musicIcon.style.color = "#3B82F6" // Warna biru saat aktif
-                        playingEffect.style.opacity = "0.3"
-                        btn.style.borderColor = "#93c5fd" // Warna border biru muda
-                        btn.style.zIndex = "1"
-                        icon.style.zIndex = "2"
-                        icon.style.position = "relative"
-                    }
-
-                    // Fungsi untuk memperbarui UI saat musik dihentikan
-                    function updateUIForPaused() {
-                        icon.className = "fas fa-play"
-                        musicIcon.className = "fas fa-music"
-                        musicIcon.style.animation = "none"
-                        musicIcon.style.color = "#6B7280" // Warna abu-abu default
-                        playingEffect.style.opacity = "0"
-                        btn.style.borderColor = "#e5e7eb" // Warna border default
-                    }
-                }
-
-                // Fungsi untuk menampilkan menu pilihan musik
-                function showMusicOptions(event) {
-                    event.stopPropagation() // Mencegah event klik menyebar ke document
-                    const musicOptions = document.getElementById("musicOptions")
-                    musicOptions.classList.toggle("hidden")
-
-                    // Tambahkan event listener untuk menutup menu saat klik di luar menu
-                    if (!musicOptions.classList.contains("hidden")) {
-                        setTimeout(() => {
-                            document.addEventListener(
-                                "click",
-                                closeMusicOptions
-                            )
-                        }, 100)
-                    }
-                }
-
-                // Fungsi untuk menutup menu pilihan musik
-                function closeMusicOptions() {
-                    const musicOptions = document.getElementById("musicOptions")
-                    musicOptions.classList.add("hidden")
-                    document.removeEventListener("click", closeMusicOptions)
-                }
-
-                // Fungsi untuk mengubah musik
-                function changeMusic(videoId, title) {
-                    const musicIcon = document.getElementById("musicIcon")
-                    const btn = document.getElementById("toggleMusicBtn")
-                    const icon = btn.querySelector("i")
-                    const playingEffect =
-                        document.getElementById("musicPlayingEffect")
-
-                    // Simpan ID video dan judul musik yang baru
-                    currentMusicId = videoId
-                    currentMusicTitle = title
-
-                    // Cek apakah YouTube API sudah siap
-                    if (
-                        !youtubePlayer ||
-                        typeof youtubePlayer.loadVideoById !== "function"
-                    ) {
-                        console.log(
-                            "YouTube API belum siap, menggunakan cara alternatif"
-                        )
-                        // Cara alternatif jika API belum siap
-                        const player = document.getElementById("youtubePlayer")
-                        // Dapatkan status playing saat ini
-                        const isPlaying = player.src.includes("autoplay=1")
-
-                        // Perbarui src iframe dengan video ID baru
-                        player.src = `https://www.youtube.com/embed/${videoId}?controls=0&showinfo=0&rel=0&autoplay=${
-                            isPlaying ? "1" : "0"
-                        }&loop=1&playlist=${videoId}&mute=${
-                            isPlaying ? "0" : "1"
-                        }&enablejsapi=1`
-                    } else {
-                        // Menggunakan YouTube API
-                        try {
-                            // Cek status player saat ini
-                            const wasPlaying =
-                                youtubePlayer.getPlayerState() ===
-                                YT.PlayerState.PLAYING
-
-                            // Muat video baru
-                            youtubePlayer.loadVideoById(videoId)
-
-                            // Jika sebelumnya tidak diputar, pause video
-                            if (!wasPlaying) {
-                                youtubePlayer.pauseVideo()
-                            } else {
-                                youtubePlayer.playVideo()
-                                youtubePlayer.unMute()
-                                youtubePlayer.setVolume(100)
-                            }
-                        } catch (e) {
-                            console.error("Error mengubah video YouTube:", e)
-                        }
-                    }
-
-                    // Jika sedang diputar, perbarui tampilan
-                    if (isPlaying) {
-                        icon.className = "fas fa-pause"
-                        musicIcon.style.animation = "pulse 1s infinite"
-                        musicIcon.style.color = "#3B82F6"
-                        playingEffect.style.opacity = "0.3"
-                        btn.style.borderColor = "#93c5fd"
-                    }
-
-                    // Tampilkan notifikasi musik berubah
-                    showMusicNotification(title)
-
-                    // Tutup menu pilihan musik
-                    closeMusicOptions()
-                }
-
-                // Fungsi untuk menampilkan notifikasi musik berubah
-                function showMusicNotification(title) {
-                    // Cek apakah sudah ada notifikasi sebelumnya
-                    let notification =
-                        document.getElementById("musicNotification")
-
-                    // Jika belum ada, buat elemen notifikasi baru
-                    if (!notification) {
-                        notification = document.createElement("div")
-                        notification.id = "musicNotification"
-                        notification.className =
-                            "fixed bottom-20 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-50 transform translate-y-10 opacity-0 transition-all duration-500"
-                        document.body.appendChild(notification)
-                    }
-
-                    // Isi notifikasi
-                    notification.innerHTML = `
-                        <div class="flex items-center">
-                            <i class="fas fa-music text-blue-500 mr-2"></i>
-                            <div>
-                                <div class="text-sm font-semibold">Musik diubah</div>
-                                <div class="text-xs text-gray-600">${title}</div>
-                            </div>
-                        </div>
-                    `
-
-                    // Tampilkan notifikasi dengan animasi
-                    setTimeout(() => {
-                        notification.style.transform = "translate(0)"
-                        notification.style.opacity = "1"
-                    }, 100)
-
-                    // Sembunyikan notifikasi setelah 3 detik
-                    setTimeout(() => {
-                        notification.style.transform = "translate-y-10"
-                        notification.style.opacity = "0"
-                    }, 3000)
-                }
-
-                // Tambahkan keyframe untuk animasi pulse jika belum ada
-                if (!document.getElementById("musicAnimationStyle")) {
-                    const style = document.createElement("style")
-                    style.id = "musicAnimationStyle"
-                    style.textContent = `
-                        @keyframes pulse {
-                            0% { transform: scale(1); }
-                            50% { transform: scale(1.2); }
-                            100% { transform: scale(1); }
-                        }
-                    `
-                    document.head.appendChild(style)
-                }
             </script>
         </div>
 
