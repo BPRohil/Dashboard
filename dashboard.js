@@ -282,8 +282,7 @@ class DashboardBapenda {
     getOptimizedChartOptions() {
         return {
             responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: 1,
+            maintainAspectRatio: false,
             layout: {
                 padding: {
                     top: 25,
@@ -542,6 +541,13 @@ class DashboardBapenda {
         const options = this.getOptimizedChartOptions()
 
         try {
+            // Pastikan container chart memiliki ukuran yang benar
+            const chartContainers = document.querySelectorAll('.chart-container');
+            chartContainers.forEach(container => {
+                container.style.height = '550px';
+                container.style.minHeight = '450px';
+            });
+
             // Create PBB Chart
             const pbbCtx = document.getElementById("pbbChart")?.getContext("2d")
             if (pbbCtx) {
@@ -557,6 +563,8 @@ class DashboardBapenda {
                     data: chartData.pbb,
                     options: {
                         ...options,
+                        maintainAspectRatio: false,
+                        responsive: true,
                         plugins: {
                             ...options.plugins,
                             title: {
@@ -589,6 +597,8 @@ class DashboardBapenda {
                     data: chartData.bphtb,
                     options: {
                         ...options,
+                        maintainAspectRatio: false,
+                        responsive: true,
                         plugins: {
                             ...options.plugins,
                             title: {
@@ -604,17 +614,20 @@ class DashboardBapenda {
                 })
             }
 
-            // Add window resize event listener to update charts
-            window.addEventListener("resize", () => {
-                if (this.charts.pbb) this.charts.pbb.resize()
-                if (this.charts.bphtb) this.charts.bphtb.resize()
-            })
+            // Add window resize event listener to update charts with debounce
+            this.debouncedResize = this.debounce(() => this.handleResize(), 250);
+            window.addEventListener("resize", this.debouncedResize);
 
             // Force an initial resize to ensure proper rendering
             setTimeout(() => {
-                if (this.charts.pbb) this.charts.pbb.resize()
-                if (this.charts.bphtb) this.charts.bphtb.resize()
-            }, 100)
+                this.handleResize();
+            }, 100);
+
+            // Tambahkan interval untuk memeriksa ukuran chart setiap 30 detik
+            // Ini akan memastikan chart tidak mengecil setelah beberapa jam
+            this.timers.chartSizeCheck = setInterval(() => {
+                this.handleResize();
+            }, 30000); // 30 detik
         } catch (error) {
             console.error("Chart creation failed:", error)
         }
@@ -808,11 +821,30 @@ class DashboardBapenda {
     }
 
     handleResize() {
-        Object.values(this.charts).forEach((chart) => {
-            if (chart && typeof chart.resize === "function") {
-                chart.resize()
-            }
-        })
+        // Pastikan container chart memiliki ukuran yang benar
+        const chartContainers = document.querySelectorAll('.chart-container');
+        chartContainers.forEach(container => {
+            container.style.height = '550px';
+            container.style.minHeight = '450px';
+        });
+
+        // Pastikan canvas chart mengisi 100% dari container
+        const chartCanvases = document.querySelectorAll('.chart-container canvas');
+        chartCanvases.forEach(canvas => {
+            canvas.style.height = '100%';
+            canvas.style.width = '100%';
+        });
+
+        // Tambahkan delay kecil sebelum resize untuk memastikan DOM telah diperbarui
+        setTimeout(() => {
+            Object.values(this.charts).forEach((chart) => {
+                if (chart && typeof chart.resize === "function") {
+                    chart.resize();
+                    // Perbarui chart tanpa animasi untuk memastikan rendering yang tepat
+                    chart.update('none');
+                }
+            });
+        }, 100);
     }
 
     // Utility methods
@@ -855,8 +887,22 @@ class DashboardBapenda {
 
     // Cleanup method
     destroy() {
+        // Bersihkan semua timer termasuk chartSizeCheck
         Object.values(this.timers).forEach((timer) => clearInterval(timer))
-        Object.values(this.charts).forEach((chart) => chart?.destroy())
+        
+        // Bersihkan event listener resize jika ada
+        if (this.debouncedResize) {
+            window.removeEventListener("resize", this.debouncedResize)
+        }
+        
+        // Hancurkan semua instance chart
+        Object.values(this.charts).forEach((chart) => {
+            if (chart && typeof chart.destroy === "function") {
+                chart.destroy()
+            }
+        })
+        
+        // Reset objek timer dan chart
         this.timers = {}
         this.charts = {}
     }
