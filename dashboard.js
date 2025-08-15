@@ -21,7 +21,6 @@ class DashboardBapenda {
         }
 
         this.elements = {}
-        this.charts = {}
         this.timers = {}
         this.touch = { startX: 0, startY: 0, endX: 0, endY: 0 }
 
@@ -119,7 +118,6 @@ class DashboardBapenda {
             this.initLoadingScreen(),
             this.initTimeUpdater(),
             this.initMarquee(),
-            this.createCharts(),
         ])
 
         // Pastikan elements sudah tersedia sebelum memulai slide
@@ -173,14 +171,7 @@ class DashboardBapenda {
             })
         }
 
-        // Update charts when needed
-        requestAnimationFrame(() => {
-            if (index === 1 && this.charts.pbb) {
-                this.charts.pbb.update("active")
-            } else if (index === 2 && this.charts.bphtb) {
-                this.charts.bphtb.update("active")
-            }
-        })
+
 
         this.updateProgressBar()
     }
@@ -278,360 +269,11 @@ class DashboardBapenda {
             .join("")
     }
 
-    // Enhanced chart configuration with beautiful styling
-    getOptimizedChartOptions() {
-        return {
-            responsive: true,
-            maintainAspectRatio: false,
-            layout: {
-                padding: {
-                    top: 25,
-                    right: 15,
-                    bottom: 10,
-                    left: 15,
-                },
-            },
-            interaction: {
-                intersect: false,
-                mode: "index",
-            },
-            plugins: {
-                legend: {
-                    display: true,
-                    position: "top",
-                    labels: {
-                        color: "#1f2937",
-                        font: {
-                            size: 14,
-                            weight: "bold",
-                            family: "Inter, sans-serif",
-                        },
-                        padding: 4,
-                        usePointStyle: true,
-                        pointStyle: "circle",
-                    },
-                },
-                tooltip: {
-                    backgroundColor: "rgba(17, 24, 39, 0.95)",
-                    titleColor: "#f9fafb",
-                    bodyColor: "#f9fafb",
-                    borderColor: "rgba(59, 130, 246, 0.5)",
-                    borderWidth: 2,
-                    cornerRadius: 12,
-                    displayColors: true,
-                    titleFont: { size: 14, weight: "bold" },
-                    bodyFont: { size: 13 },
-                    padding: 8,
-                    caretPadding: 8,
-                    callbacks: {
-                        title: (context) => `${context[0].label} 2025`,
-                        label: (context) =>
-                            `💰 Rp ${context.parsed.y.toLocaleString(
-                                "id-ID"
-                            )} Juta`,
-                        afterLabel: (context) => {
-                            const total = context.dataset.data.reduce(
-                                (a, b) => a + b,
-                                0
-                            )
-                            const percentage = (
-                                (context.parsed.y / total) *
-                                100
-                            ).toFixed(1)
-                            return `📊 ${percentage}% dari total`
-                        },
-                    },
-                },
-                datalabels: {
-                    display: true,
-                    color: "#1f2937",
-                    backgroundColor: "rgba(255, 255, 255, 0.9)",
-                    borderColor: "rgba(59, 130, 246, 0.3)",
-                    borderWidth: 1,
-                    borderRadius: 6,
-                    font: {
-                        size: 12,
-                        weight: "bold",
-                        family: "Inter, sans-serif",
-                    },
-                    padding: 6,
-                    anchor: "center",
-                    align: "top",
-                    offset: 8,
-                    clip: false,
-                    formatter: (value) => `${value} Jt`,
-                },
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: "rgba(156, 163, 175, 0.2)",
-                        lineWidth: 1,
-                        drawBorder: false,
-                    },
-                    border: {
-                        display: false,
-                    },
-                    ticks: {
-                        color: "#6b7280",
-                        font: {
-                            size: 12,
-                            family: "Inter, sans-serif",
-                        },
-                        padding: 4,
-                        callback: (value) => `${value} Jt`,
-                    },
-                    title: {
-                        display: true,
-                        text: "Penerimaan (Juta Rupiah)",
-                        color: "#374151",
-                        font: {
-                            size: 13,
-                            weight: "bold",
-                            family: "Inter, sans-serif",
-                        },
-                        padding: 10,
-                    },
-                },
-                x: {
-                    grid: {
-                        color: "rgba(156, 163, 175, 0.1)",
-                        lineWidth: 1,
-                        drawBorder: false,
-                    },
-                    border: {
-                        display: false,
-                    },
-                    ticks: {
-                        color: "#6b7280",
-                        font: {
-                            size: 16,
-                            family: "Inter, sans-serif",
-                        },
-                        padding: 12,
-                    },
-                    // title: {
-                    //     display: true,
-                    //     text: "Bulan",
-                    //     color: "#374151",
-                    //     font: {
-                    //         size: 13,
-                    //         weight: "bold",
-                    //         family: "Inter, sans-serif",
-                    //     },
-                    //     padding: 10,
-                    // },
-                },
-            },
-            animation: {
-                duration: 2500,
-                easing: "easeInOutCubic",
-                delay: (context) => context.dataIndex * 100,
-            },
-            elements: {
-                point: {
-                    radius: 6,
-                    hoverRadius: 10,
-                    hoverBorderWidth: 3,
-                    borderWidth: 2,
-                    hitRadius: 10,
-                },
-                line: {
-                    tension: 0.4,
-                    borderWidth: 3,
-                    fill: true,
-                },
-            },
-            onResize: (chart, size) => {
-                // Ensure chart maintains proper scaling on zoom changes
-                chart.update("none")
-            },
-        }
-    }
 
-    // Enhanced chart data with beautiful gradients and styling
-    getChartData() {
-        const months = DataConfig.getBulan()
 
-        // Create gradient for PBB chart
-        const createGradient = (ctx, colorStart, colorEnd) => {
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400)
-            gradient.addColorStop(0, colorStart)
-            gradient.addColorStop(1, colorEnd)
-            return gradient
-        }
 
-        return {
-            pbb: {
-                labels: months,
-                datasets: [
-                    {
-                        label: "💰 PBB(Pajak Bumi & Bangunan)",
-                        data: DataConfig.getDataPBB(),
-                        backgroundColor: (context) => {
-                            const ctx = context.chart.ctx
-                            return createGradient(
-                                ctx,
-                                "rgba(16, 185, 129, 0.3)",
-                                "rgba(16, 185, 129, 0.05)"
-                            )
-                        },
-                        borderColor: "#10b981",
-                        borderWidth: 6,
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: "#ffffff",
-                        pointBorderColor: "#10b981",
-                        pointBorderWidth: 3,
-                        pointRadius: 7,
-                        pointHoverRadius: 10,
-                        pointHoverBackgroundColor: "#10b981",
-                        pointHoverBorderColor: "#ffffff",
-                        pointHoverBorderWidth: 4,
-                        shadowOffsetX: 3,
-                        shadowOffsetY: 3,
-                        shadowBlur: 10,
-                        shadowColor: "rgba(59, 130, 246, 0.3)",
-                        cubicInterpolationMode: "monotone",
-                        spanGaps: false,
-                    },
-                ],
-            },
-            bphtb: {
-                labels: months,
-                datasets: [
-                    {
-                        label: "🏠 BPHTB (Bea Perolehan Hak atas Tanah & Bangunan)",
-                        data: DataConfig.getDataBPHTB(),
-                        backgroundColor: (context) => {
-                            const ctx = context.chart.ctx
-                            return createGradient(
-                                ctx,
-                                "rgba(16, 185, 129, 0.3)",
-                                "rgba(16, 185, 129, 0.05)"
-                            )
-                        },
-                        borderColor: "#10b981",
-                        borderWidth: 4,
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: "#ffffff",
-                        pointBorderColor: "#10b981",
-                        pointBorderWidth: 3,
-                        pointRadius: 7,
-                        pointHoverRadius: 10,
-                        pointHoverBackgroundColor: "#10b981",
-                        pointHoverBorderColor: "#ffffff",
-                        pointHoverBorderWidth: 4,
-                        shadowOffsetX: 3,
-                        shadowOffsetY: 3,
-                        shadowBlur: 10,
-                        shadowColor: "rgba(16, 185, 129, 0.3)",
-                        cubicInterpolationMode: "monotone",
-                        spanGaps: false,
-                    },
-                ],
-            },
-        }
-    }
 
-    async createCharts() {
-        const chartData = this.getChartData()
-        const options = this.getOptimizedChartOptions()
 
-        try {
-            // Pastikan container chart memiliki ukuran yang benar
-            const chartContainers = document.querySelectorAll('.chart-container');
-            chartContainers.forEach(container => {
-                container.style.height = '550px';
-                container.style.minHeight = '450px';
-            });
-
-            // Create PBB Chart
-            const pbbCtx = document.getElementById("pbbChart")?.getContext("2d")
-            if (pbbCtx) {
-                // Ensure canvas is properly sized before creating chart
-                const pbbCanvas = document.getElementById("pbbChart")
-                if (pbbCanvas) {
-                    pbbCanvas.style.height = "100%"
-                    pbbCanvas.style.width = "100%"
-                }
-
-                this.charts.pbb = new Chart(pbbCtx, {
-                    type: "line",
-                    data: chartData.pbb,
-                    options: {
-                        ...options,
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        plugins: {
-                            ...options.plugins,
-                            title: {
-                                display: true,
-                                text: "Grafik Penerimaan PBB 2025",
-                                color: "#374151",
-                                font: { size: 18, weight: "bold" },
-                                padding: 10,
-                            },
-                        },
-                    },
-                    plugins: [ChartDataLabels],
-                })
-            }
-
-            // Create BPHTB Chart
-            const bphtbCtx = document
-                .getElementById("bphtbChart")
-                ?.getContext("2d")
-            if (bphtbCtx) {
-                // Ensure canvas is properly sized before creating chart
-                const bphtbCanvas = document.getElementById("bphtbChart")
-                if (bphtbCanvas) {
-                    bphtbCanvas.style.height = "100%"
-                    bphtbCanvas.style.width = "100%"
-                }
-
-                this.charts.bphtb = new Chart(bphtbCtx, {
-                    type: "line",
-                    data: chartData.bphtb,
-                    options: {
-                        ...options,
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        plugins: {
-                            ...options.plugins,
-                            title: {
-                                display: true,
-                                text: "Grafik Penerimaan BPHTB 2025",
-                                color: "#374151",
-                                font: { size: 18, weight: "bold" },
-                                padding: 10,
-                            },
-                        },
-                    },
-                    plugins: [ChartDataLabels],
-                })
-            }
-
-            // Add window resize event listener to update charts with debounce
-            this.debouncedResize = this.debounce(() => this.handleResize(), 250);
-            window.addEventListener("resize", this.debouncedResize);
-
-            // Force an initial resize to ensure proper rendering
-            setTimeout(() => {
-                this.handleResize();
-            }, 100);
-
-            // Tambahkan interval untuk memeriksa ukuran chart setiap 30 detik
-            // Ini akan memastikan chart tidak mengecil setelah beberapa jam
-            this.timers.chartSizeCheck = setInterval(() => {
-                this.handleResize();
-            }, 30000); // 30 detik
-        } catch (error) {
-            console.error("Chart creation failed:", error)
-        }
-    }
 
     showSlide(index) {
         if (index < 0 || index >= this.elements.slides.length) return
@@ -650,14 +292,7 @@ class DashboardBapenda {
                     : "w-5 h-5 rounded-full bg-gray-300 text-gray-600 cursor-pointer transition-all duration-300 hover:bg-blue-500 hover:scale-110 shadow-lg"
         })
 
-        // Update charts when needed
-        requestAnimationFrame(() => {
-            if (index === 1 && this.charts.pbb) {
-                this.charts.pbb.update("active")
-            } else if (index === 2 && this.charts.bphtb) {
-                this.charts.bphtb.update("active")
-            }
-        })
+
 
         this.updateProgressBar()
     }
@@ -821,30 +456,7 @@ class DashboardBapenda {
     }
 
     handleResize() {
-        // Pastikan container chart memiliki ukuran yang benar
-        const chartContainers = document.querySelectorAll('.chart-container');
-        chartContainers.forEach(container => {
-            container.style.height = '550px';
-            container.style.minHeight = '450px';
-        });
-
-        // Pastikan canvas chart mengisi 100% dari container
-        const chartCanvases = document.querySelectorAll('.chart-container canvas');
-        chartCanvases.forEach(canvas => {
-            canvas.style.height = '100%';
-            canvas.style.width = '100%';
-        });
-
-        // Tambahkan delay kecil sebelum resize untuk memastikan DOM telah diperbarui
-        setTimeout(() => {
-            Object.values(this.charts).forEach((chart) => {
-                if (chart && typeof chart.resize === "function") {
-                    chart.resize();
-                    // Perbarui chart tanpa animasi untuk memastikan rendering yang tepat
-                    chart.update('none');
-                }
-            });
-        }, 100);
+        // Handle responsive layout adjustments if needed
     }
 
     // Utility methods
@@ -887,7 +499,7 @@ class DashboardBapenda {
 
     // Cleanup method
     destroy() {
-        // Bersihkan semua timer termasuk chartSizeCheck
+        // Bersihkan semua timer
         Object.values(this.timers).forEach((timer) => clearInterval(timer))
         
         // Bersihkan event listener resize jika ada
@@ -895,16 +507,8 @@ class DashboardBapenda {
             window.removeEventListener("resize", this.debouncedResize)
         }
         
-        // Hancurkan semua instance chart
-        Object.values(this.charts).forEach((chart) => {
-            if (chart && typeof chart.destroy === "function") {
-                chart.destroy()
-            }
-        })
-        
-        // Reset objek timer dan chart
+        // Reset objek timer
         this.timers = {}
-        this.charts = {}
     }
 }
 
