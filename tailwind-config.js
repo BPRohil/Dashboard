@@ -18,7 +18,7 @@ tailwind.config = {
     // Enhanced theme configuration
     theme: {
         extend: {
-            // Custom color palette
+            // Enhanced color palette with glass effects
             colors: {
                 primary: {
                     50: '#eff6ff',
@@ -55,6 +55,26 @@ tailwind.config = {
                     700: '#047857',
                     800: '#065f46',
                     900: '#064e3b'
+                },
+                glass: {
+                    white: 'rgba(255, 255, 255, 0.1)',
+                    'white-light': 'rgba(255, 255, 255, 0.05)',
+                    'white-medium': 'rgba(255, 255, 255, 0.15)',
+                    'white-strong': 'rgba(255, 255, 255, 0.25)',
+                    black: 'rgba(0, 0, 0, 0.1)',
+                    'black-light': 'rgba(0, 0, 0, 0.05)',
+                    'black-medium': 'rgba(0, 0, 0, 0.15)',
+                    'black-strong': 'rgba(0, 0, 0, 0.25)'
+                },
+                rainbow: {
+                    'pink': '#ff0096',
+                    'orange': '#ff6400',
+                    'yellow': '#ffff00',
+                    'green': '#00ff64',
+                    'cyan': '#00ffff',
+                    'blue': '#0096ff',
+                    'purple': '#6400ff',
+                    'magenta': '#ff00c8'
                 }
             },
             
@@ -202,7 +222,40 @@ tailwind.config = {
                     '100%': {
                         opacity: '1'
                     }
+                },
+                'glass-float': {
+                    '0%, 100%': {
+                        transform: 'translateY(0px) scale(1)'
+                    },
+                    '50%': {
+                        transform: 'translateY(-2px) scale(1.01)'
+                    }
+                },
+                'glass-pulse': {
+                    '0%, 100%': {
+                        boxShadow: '0 8px 32px rgba(31, 38, 135, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
+                    },
+                    '50%': {
+                        boxShadow: '0 12px 40px rgba(31, 38, 135, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4)'
+                    }
+                },
+                'shimmer-glass': {
+                    '0%': {
+                        left: '-100%'
+                    },
+                    '100%': {
+                        left: '100%'
+                    }
                 }
+            },
+            
+            // Enhanced background images
+            backgroundImage: {
+                'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+                'rainbow-gradient': 'linear-gradient(135deg, #ff0096 0%, #ff6400 14%, #ffff00 28%, #00ff64 42%, #0096ff 56%, #6400ff 70%, #ff00c8 84%, #ff0096 100%)',
+                'rainbow-radial': 'radial-gradient(circle, #ff0096 0%, #ff6400 20%, #ffff00 40%, #00ff64 60%, #0096ff 80%, #6400ff 100%)',
+                'rainbow-conic': 'conic-gradient(from 0deg, #ff0096, #ff6400, #ffff00, #00ff64, #0096ff, #6400ff, #ff00c8, #ff0096)'
             },
             
             // Enhanced spacing scale
@@ -223,14 +276,30 @@ tailwind.config = {
             boxShadow: {
                 'glass': '0 8px 32px rgba(31, 38, 135, 0.37)',
                 'glass-lg': '0 12px 40px rgba(31, 38, 135, 0.5)',
+                'glass-xl': '0 20px 60px rgba(31, 38, 135, 0.6)',
+                'glass-inset': 'inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+                'glass-combined': '0 8px 32px rgba(31, 38, 135, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
                 'glow': '0 0 20px rgba(59, 130, 246, 0.5)',
-                'glow-lg': '0 0 40px rgba(59, 130, 246, 0.6)'
+                'glow-lg': '0 0 40px rgba(59, 130, 246, 0.6)',
+                'glow-blue': '0 0 30px rgba(59, 130, 246, 0.4)',
+                'glow-green': '0 0 30px rgba(34, 197, 94, 0.4)',
+                'glow-purple': '0 0 30px rgba(147, 51, 234, 0.4)',
+                'glow-colorful': '0 0 40px rgba(59, 130, 246, 0.3), 0 0 60px rgba(147, 51, 234, 0.2)'
             },
             
             // Enhanced backdrop blur
             backdropBlur: {
                 'xs': '2px',
-                '4xl': '72px'
+                'sm': '4px',
+                'md': '12px',
+                'lg': '16px',
+                'xl': '24px',
+                '2xl': '40px',
+                '3xl': '64px',
+                '4xl': '72px',
+                'glass': '20px',
+                'glass-light': '10px',
+                'glass-heavy': '30px'
             },
             
             // Enhanced border radius
@@ -281,8 +350,33 @@ tailwind.config = {
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.37)'
                 },
+                '.glass-morphism': {
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(20px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    boxShadow: '0 8px 32px rgba(31, 38, 135, 0.37)'
+                },
+                '.glass-light': {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    backdropFilter: 'blur(15px)',
+                    WebkitBackdropFilter: 'blur(15px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                },
                 '.text-shadow': {
-                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                    textShadow: '0 2px 4px rgba(0,0,0,0.10)'
+                },
+                '.text-shadow-sm': {
+                    textShadow: '0 1px 2px rgba(0,0,0,0.1)'
+                },
+                '.text-shadow-md': {
+                    textShadow: '0 4px 8px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.08)'
+                },
+                '.text-shadow-lg': {
+                    textShadow: '0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.07)'
+                },
+                '.text-shadow-none': {
+                    textShadow: 'none'
                 },
                 '.text-shadow-lg': {
                     textShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
@@ -309,6 +403,36 @@ tailwind.config = {
                 };
             }
             addUtilities(delays);
+        },
+        
+        // Custom plugin for additional glass animations
+        function({ addUtilities }) {
+            addUtilities({
+                '.animate-float': {
+                    animation: 'float 3s ease-in-out infinite'
+                },
+                '.animate-glass-float': {
+                    animation: 'glass-float 4s ease-in-out infinite'
+                },
+                '.animate-glass-pulse': {
+                    animation: 'glass-pulse 3s ease-in-out infinite'
+                },
+                '.animate-shimmer-glass': {
+                    animation: 'shimmer-glass 3s infinite'
+                },
+                '.animate-rainbow-shift': {
+                    animation: 'rainbow-shift 8s ease-in-out infinite'
+                },
+                '.animate-rainbow-shimmer': {
+                    animation: 'rainbow-shimmer 4s linear infinite'
+                },
+                '.animate-rainbow-pulse': {
+                    animation: 'rainbow-pulse-1 3s ease-in-out infinite'
+                },
+                '.animate-rainbow-glow': {
+                    animation: 'rainbow-total-glow 2s ease-in-out infinite'
+                }
+            })
         }
     ],
     

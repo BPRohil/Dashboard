@@ -24,22 +24,50 @@ class DashboardBapenda {
         this.timers = {}
         this.touch = { startX: 0, startY: 0, endX: 0, endY: 0 }
 
-        this.marqueeMessages = [
-            {
-                icon: "fas fa-bullhorn",
-                text: "Selamat datang di Badan Pendapatan Daerah (BAPENDA) Kabupaten Rokan Hilir",
-            },
-            {
-                icon: "fas fa-info-circle",
-                text: "Periode pelaporan: Januari - Juni 2025",
-            },
-            {
-                icon: "fas fa-globe",
-                text: "Hubungi Kami di: bapenda.rohil@gmail.com | Facebook: Bapenda Rohil | Instagram: bapenda_rohil",
-            },
-        ]
+        // Load marquee messages from external config file
+        this.marqueeMessages = this.loadMarqueeConfig()
 
         this.init()
+    }
+
+    /**
+     * Load marquee configuration from external config file
+     * Falls back to default messages if config is not available
+     */
+    loadMarqueeConfig() {
+        try {
+            // Check if BapendaTickerManager is available (from marquee-config.js)
+            if (typeof BapendaTickerManager !== 'undefined') {
+                return BapendaTickerManager.getActiveMessages()
+            }
+            // Fallback to old MarqueeManager for backward compatibility
+            if (typeof MarqueeManager !== 'undefined') {
+                return MarqueeManager.getActiveMessages()
+            }
+            
+            // Fallback to default financial ticker messages
+            return [
+                {
+                    icon: "",
+                    text: '<span class="inline-flex items-center space-x-2"><span class="text-black font-bold">PBB</span><span class="text-black font-semibold">Rp2.854.66M</span><span class="text-red-400 font-medium">-17.38</span><span class="text-green-400 font-medium">(+0.67%)</span></span>',
+                },
+                {
+                    icon: "",
+                    text: '<span class="inline-flex items-center space-x-2"><span class="text-black font-bold">BPHTB</span><span class="text-black font-semibold">Rp387.11M</span><span class="text-green-400 font-medium">+6.09</span><span class="text-green-400 font-medium">(+1.31%)</span></span>',
+                },
+                {
+                    icon: "",
+                    text: '<span class="inline-flex items-center space-x-2"><span class="text-black font-bold">RETRIB</span><span class="text-black font-semibold">Rp241.46M</span><span class="text-red-400 font-medium">-4.71</span><span class="text-red-400 font-medium">(-3.5%)</span></span>',
+                },
+                {
+                    icon: "",
+                    text: '<span class="inline-flex items-center space-x-2"><span class="text-black font-bold">TOTAL</span><span class="text-black font-semibold">Rp3.483.23M</span><span class="text-green-400 font-medium">+16.00</span><span class="text-green-400 font-medium">(+0.46%)</span></span>',
+                }
+            ]
+        } catch (error) {
+            console.warn('Failed to load marquee config, using fallback messages:', error)
+            return []
+        }
     }
 
     async init() {
@@ -264,9 +292,19 @@ class DashboardBapenda {
         this.elements.marqueeContent.innerHTML = messages
             .map(
                 (msg) =>
-                    `<span class="mx-8"><i class="${msg.icon} mr-2"></i>${msg.text}</span>`
+                    `<span class="mx-8">${msg.icon ? `<i class="${msg.icon} mr-2"></i>` : ''}${msg.text}</span>`
             )
-            .join("")
+            .join('')
+            
+        // Apply dynamic animation duration based on content length
+        const manager = typeof BapendaTickerManager !== 'undefined' ? BapendaTickerManager : MarqueeManager
+        if (typeof manager !== 'undefined' && manager.calculateAnimationDuration) {
+            const duration = manager.calculateAnimationDuration()
+            // Apply duration to the marquee content element itself
+            if (this.elements.marqueeContent) {
+                this.elements.marqueeContent.style.animationDuration = duration
+            }
+        }
     }
 
 
@@ -495,6 +533,40 @@ class DashboardBapenda {
     setMarqueeMessages(newMessages) {
         this.marqueeMessages = newMessages
         this.updateMarqueeContent()
+    }
+
+    /**
+     * Switch to a different marquee message set from config
+     */
+    switchMarqueeSet(setName) {
+        const manager = typeof BapendaTickerManager !== 'undefined' ? BapendaTickerManager : MarqueeManager
+        if (typeof manager !== 'undefined') {
+            if (manager.switchSet(setName)) {
+                this.marqueeMessages = manager.getActiveMessages()
+                this.updateMarqueeContent()
+                return true
+            }
+        }
+        return false
+    }
+
+    /**
+     * Reload marquee messages from config file
+     */
+    reloadMarqueeConfig() {
+        this.marqueeMessages = this.loadMarqueeConfig()
+        this.updateMarqueeContent()
+    }
+
+    /**
+     * Get available marquee sets
+     */
+    getAvailableMarqueeSets() {
+        const manager = typeof BapendaTickerManager !== 'undefined' ? BapendaTickerManager : MarqueeManager
+        if (typeof manager !== 'undefined') {
+            return manager.getAvailableSets()
+        }
+        return ['financial'] // fallback
     }
 
     // Cleanup method

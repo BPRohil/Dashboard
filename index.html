@@ -8,14 +8,14 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>BAPENDA - Badan Pendapatan Daerah Rohil</title>
-        
+
         <!-- External CSS and JavaScript libraries -->
         <script src="https://cdn.tailwindcss.com"></script>
         <link
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
             rel="stylesheet"
         />
-        
+
         <!-- Local configuration and styles -->
         <script src="tailwind-config.js"></script>
         <link rel="stylesheet" href="styles.css" />
@@ -24,7 +24,6 @@
          BODY - Main application container with loading screen
          ======================================== -->
     <body class="font-sans bg-white h-screen overflow-hidden">
-        
         <!-- ========================================
              LOADING SCREEN - Initial loading animation
              Purpose: Shows loading spinner while dashboard initializes
@@ -50,7 +49,6 @@
              Purpose: Contains all dashboard elements and slides
              ======================================== -->
         <div class="w-screen h-screen relative">
-            
             <!-- ========================================
                  HEADER SECTION - Logo, title, and current time
                  Purpose: Fixed header with branding and real-time clock
@@ -58,7 +56,9 @@
             <header
                 class="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 shadow-sm p-2"
             >
-                <div class="flex justify-between items-center max-w-7xl mx-auto">
+                <div
+                    class="flex justify-between items-center max-w-7xl mx-auto"
+                >
                     <!-- Logo and organization name -->
                     <div class="flex items-center space-x-3">
                         <img
@@ -76,31 +76,118 @@
             </header>
 
             <!-- ========================================
-                 MARQUEE BANNER - Scrolling information text
-                 Purpose: Displays important announcements and contact info
+                 FINANCIAL TICKER MARQUEE SECTION - LIQUID GLASS UI
+                 Purpose: Displays financial-style ticker with tax revenue data
+                 Features: Apple-inspired glassmorphism, colorful glass effects, responsive design
                  ======================================== -->
             <div
-                class="fixed top-16 left-0 right-0 z-30 bg-gradient-to-r from-blue-600 to-blue-800 text-white py-2 shadow-md"
+                class="fixed top-16 left-0 right-0 z-30 marquee-glass text-black py-3 shadow-2xl"
+                role="banner"
+                aria-label="Data pendapatan pajak BAPENDA"
             >
-                <div class="marquee-container overflow-hidden whitespace-nowrap">
-                    <div class="marquee-content inline-block animate-marquee text-md font-medium">
-                        <!-- Welcome message -->
-                        <span class="mx-8">
-                            <i class="fas fa-bullhorn mr-2"></i>
-                            Selamat datang di Dashboard BAPENDA Kabupaten Rokan Hilir
+                <div
+                    class="marquee-container overflow-hidden whitespace-nowrap relative"
+                >
+                    <div
+                        class="marquee-content inline-block animate-marquee text-base font-mono tracking-wider"
+                    >
+                        <!-- PBB Revenue Data with Glass Effect -->
+                        <span
+                            class="mx-8 inline-flex items-center space-x-3 glass-rainbow-1 px-4 py-2 rounded-full backdrop-blur-md"
+                        >
+                            <span class="text-black font-bold text-shadow-sm"
+                                >PBB</span
+                            >
+                            <span
+                                class="text-black font-semibold drop-shadow-sm"
+                                >Rp2.854.66M</span
+                            >
+                            <span
+                                class="text-red-300 font-medium drop-shadow-sm"
+                                >-17.38</span
+                            >
+                            <span
+                                class="text-emerald-300 font-medium drop-shadow-sm"
+                                >(+0.67%)</span
+                            >
                         </span>
-                        <!-- Reporting period -->
-                        <span class="mx-8">
-                            <i class="fas fa-info-circle mr-2"></i>
-                            Periode pelaporan: Januari - Juni 2025
+
+                        <!-- BPHTB Revenue Data with Glass Effect -->
+                        <span
+                            class="mx-8 inline-flex items-center space-x-3 glass-rainbow-2 px-4 py-2 rounded-full backdrop-blur-md"
+                        >
+                            <span class="text-black font-bold text-shadow-sm"
+                                >BPHTB</span
+                            >
+                            <span
+                                class="text-black font-semibold drop-shadow-sm"
+                                >Rp387.11M</span
+                            >
+                            <span
+                                class="text-emerald-300 font-medium drop-shadow-sm"
+                                >+6.09</span
+                            >
+                            <span
+                                class="text-emerald-300 font-medium drop-shadow-sm"
+                                >(+1.31%)</span
+                            >
                         </span>
-                        <!-- Contact information -->
-                        <span class="mx-8">
-                            <i class="fas fa-phone mr-2"></i>
-                            Hubungi kami di: bapenda.rohil@gmail.com
+
+                        <!-- Retribusi Revenue Data with Glass Effect -->
+                        <span
+                            class="mx-8 inline-flex items-center space-x-3 glass-rainbow-3 px-4 py-2 rounded-full backdrop-blur-md"
+                        >
+                            <span class="text-black font-bold text-shadow-sm"
+                                >RETRIB</span
+                            >
+                            <span
+                                class="text-black font-semibold drop-shadow-sm"
+                                >Rp241.46M</span
+                            >
+                            <span
+                                class="text-red-300 font-medium drop-shadow-sm"
+                                >-4.71</span
+                            >
+                            <span
+                                class="text-red-300 font-medium drop-shadow-sm"
+                                >(-3.5%)</span
+                            >
                         </span>
+
+                        <!-- Total Revenue Data with Enhanced Glass Effect -->
+                        <span
+                            class="mx-8 inline-flex items-center space-x-3 glass-rainbow-total px-5 py-2 rounded-full backdrop-blur-lg border border-white/20"
+                        >
+                            <span class="text-black font-bold text-shadow-sm"
+                                >TOTAL</span
+                            >
+                            <span
+                                class="text-black font-semibold drop-shadow-sm"
+                                >Rp3.483.23M</span
+                            >
+                            <span
+                                class="text-emerald-300 font-medium drop-shadow-sm"
+                                >+16.00</span
+                            >
+                            <span
+                                class="text-emerald-300 font-medium drop-shadow-sm"
+                                >(+0.46%)</span
+                            >
+                        </span>
+
+                        <!-- Glass separator with shimmer effect -->
+                        <span
+                            class="mx-8 text-black/60 drop-shadow-sm"
+                            aria-hidden="true"
+                            >✦</span
+                        >
                     </div>
                 </div>
+
+                <!-- Ambient light effect overlay -->
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-green-500/5 pointer-events-none"
+                ></div>
             </div>
 
             <!-- ========================================
@@ -108,7 +195,7 @@
                  Purpose: Displays rotating slides with BAPENDA content and infographics
                  Note: Each slide has opacity-0 by default, controlled by JavaScript
                  ======================================== -->
-            
+
             <!-- Slide 1: Main BAPENDA Logo -->
             <div
                 class="slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-0 bg-white flex items-center justify-center"
@@ -125,7 +212,7 @@
                 class="slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-0 bg-white flex items-center justify-center pt-32 p-10"
             >
                 <img
-                    src="./Images/img1.png"
+                    src="./Images/17agustus.png"
                     alt="Informasi Umum BAPENDA"
                     class="max-w-full max-h-full object-contain rounded-xl"
                 />
@@ -200,7 +287,7 @@
                 >
                     <i class="fas fa-pause"></i>
                 </button>
-                
+
                 <!-- Fullscreen toggle control -->
                 <button
                     id="fullscreenBtn"
@@ -221,7 +308,7 @@
                 >
                     <!-- Audio control icon -->
                     <i id="audioBtnIcon" class="fas fa-music text-blue-600"></i>
-                    
+
                     <!-- Expandable audio player box -->
                     <div
                         id="audioBox"
@@ -245,7 +332,7 @@
                         <!-- Background music audio element -->
                         <audio controls autoplay loop muted style="width: 100%">
                             <source
-                                src="https://www.dropbox.com/scl/fi/8fe0n08pjhjw051adh8p5/musiklounge1.mp3?rlkey=06o67a9fhtt9iau6hik18zaa0&st=i2geod42&raw=1"
+                                src="https://www.dropbox.com/scl/fi/by12p526v5iqj15s6v22l/nusantara.mp3?rlkey=vw5qeq5z1vyjhy0kneyubkxko&st=yyevb2ep&raw=1"
                                 type="audio/mpeg"
                             />
                             Your browser does not support the audio element.
@@ -264,9 +351,9 @@
                  * Changes icon between music note and close (X) symbol
                  */
                 function toggleAudioPlayer() {
-                    const audioBox = document.getElementById("audioBox");
-                    const icon = document.getElementById("audioBtnIcon");
-                    
+                    const audioBox = document.getElementById("audioBox")
+                    const icon = document.getElementById("audioBtnIcon")
+
                     // Check if audio box is currently hidden
                     if (
                         audioBox.style.display === "none" ||
@@ -274,28 +361,28 @@
                         audioBox.style.opacity === "0"
                     ) {
                         // Show audio player
-                        audioBox.style.display = "flex";
-                        audioBox.style.visibility = "visible";
-                        audioBox.style.opacity = "1";
-                        icon.className = "fas fa-times text-red-500";
+                        audioBox.style.display = "flex"
+                        audioBox.style.visibility = "visible"
+                        audioBox.style.opacity = "1"
+                        icon.className = "fas fa-times text-red-500"
                     } else {
                         // Hide audio player
-                        audioBox.style.display = "none";
-                        audioBox.style.visibility = "hidden";
-                        audioBox.style.opacity = "0";
-                        icon.className = "fas fa-music text-blue-600";
+                        audioBox.style.display = "none"
+                        audioBox.style.visibility = "hidden"
+                        audioBox.style.opacity = "0"
+                        icon.className = "fas fa-music text-blue-600"
                     }
                 }
-                
+
                 /**
                  * Initialize audio player as visible when page loads
                  */
                 window.addEventListener("DOMContentLoaded", function () {
-                    const audioBox = document.getElementById("audioBox");
-                    audioBox.style.display = "flex";
-                    audioBox.style.visibility = "visible";
-                    audioBox.style.opacity = "1";
-                });
+                    const audioBox = document.getElementById("audioBox")
+                    audioBox.style.display = "flex"
+                    audioBox.style.visibility = "visible"
+                    audioBox.style.opacity = "1"
+                })
             </script>
         </div>
 
@@ -303,12 +390,11 @@
              EXTERNAL SCRIPTS - Data configuration and main dashboard logic
              Purpose: Load external JavaScript files for dashboard functionality
              ======================================== -->
-        
-        <!-- Data configuration file - Contains dashboard data and settings -->
-        <script src="data-config.js"></script>
-        
+
+        <!-- Marquee configuration - Contains all ticker messages and settings -->
+        <script src="marquee-config.js"></script>
+
         <!-- Main dashboard JavaScript - Handles slideshow, animations, and interactions -->
         <script src="dashboard.js"></script>
-        
     </body>
 </html>
