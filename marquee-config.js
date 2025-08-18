@@ -20,42 +20,32 @@ const BAPENDA_TICKER_MESSAGES = {
     financial: [
         {
             icon: "",
-            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Selamat datang di Badan Pendapatan Daerah (BAPENDA) Kabupaten Rokan Hilir</span></span>',
+            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Realisasi Pendapatan Asli Daerah (1 Januari 2025 s/d 11 Agustus 2025)</span></span>',
             category: "revenue",
         },
         {
             icon: "",
-            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Hubungi Kami di: bapenda.rohil@gmail.com | Facebook: Bapenda Rohil | Instagram: bapenda_rohil</span></span>',
+            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Total Pendapatan Pajak: 81,8 Miliar</span></span>',
+            category: "revenue",
+        },
+        {
+            icon: "",
+            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">PBB-P2: 7,3 Miliar | BPHTB: 3,5 Miliar</span></span>',
+            category: "revenue",
+        },
+        {
+            icon: "",
+            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">PBJT Makan atau Minum: 2,8 Miliar | PBJT Tenaga Listrik: 26,9 Miliar | PBJT Perhotelan: 1 Miliar | PBJT Parkir: 471 Juta | PBJT Kesenian dan Hiburan: 899 Juta | Reklame: 761 Juta | Air Tanah: 641 Juta | Sarang Burung Walet: 29 Juta | MBLB: 1,6 Miliar</span></span>',
+            category: "revenue",
+        },
+        {
+            icon: "",
+            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Opsen PKB: 19,5 Miliar | Opsen BBNKB: 16 Miliar</span></span>',
             category: "revenue",
         },
         // {
         //     icon: "",
         //     text: '<span class="inline-flex items-center space-x-2"><span class="text-black font-bold">Hubungi Kami di: bapenda.rohil@gmail.com | Facebook: Bapenda Rohil | Instagram: bapenda_rohil</span></span>',
-        //     category: "revenue",
-        // },
-        // {
-        //     icon: "",
-        //     text: '<span class="inline-flex items-center space-x-2"><span class="text-black font-bold">PBB</span><span class="text-black font-semibold">Rp2.854.66M</span></span>',
-        //     category: "revenue",
-        // },
-        // {
-        //     icon: "",
-        //     text: '<span class="inline-flex items-center space-x-2"><span class="text-black font-bold">PBB</span><span class="text-black font-semibold">Rp2.854.66M</span></span>',
-        //     category: "revenue",
-        // },
-        // {
-        //     icon: "",
-        //     text: '<span class="inline-flex items-center space-x-2"><span class="text-black font-bold">PBB</span><span class="text-black font-semibold">Rp2.854.66M</span></span>',
-        //     category: "revenue",
-        // },
-        // {
-        //     icon: "",
-        //     text: '<span class="inline-flex items-center space-x-2"><span class="text-black font-bold">PBB</span><span class="text-black font-semibold">Rp2.854.66M</span></span>',
-        //     category: "revenue",
-        // },
-        // {
-        //     icon: "",
-        //     text: '<span class="inline-flex items-center space-x-2"><span class="text-black font-bold">PBB</span><span class="text-black font-semibold">Rp2.854.66M</span></span>',
         //     category: "revenue",
         // },
     ],
@@ -97,6 +87,9 @@ const BAPENDA_TICKER_SETTINGS = {
 
     // Animation settings
     speed: "normal", // 'slow', 'normal', 'fast'
+    baseSpeed: 60, // Base speed in pixels per second for optimal readability
+    minDuration: 20, // Minimum animation duration in seconds
+    maxDuration: 120, // Maximum animation duration in seconds
 
     // Display settings
     showSeparator: true,
@@ -152,6 +145,92 @@ const BapendaTickerManager = {
      */
     getAvailableSets() {
         return Object.keys(BAPENDA_TICKER_MESSAGES)
+    },
+
+    /**
+     * Calculate optimal animation duration based on content length
+     * This ensures consistent readability regardless of text volume
+     */
+    calculateAnimationDuration() {
+        const messages = this.getActiveMessages()
+        if (!messages || messages.length === 0) {
+            return `${BAPENDA_TICKER_SETTINGS.minDuration}s`
+        }
+
+        // Calculate total content length (including HTML tags for accurate measurement)
+        const totalLength = messages.reduce((total, msg) => {
+            // Create a temporary element to measure actual text content
+            const tempDiv = document.createElement("div")
+            tempDiv.innerHTML = msg.text
+            const textContent = tempDiv.textContent || tempDiv.innerText || ""
+            return total + textContent.length
+        }, 0)
+
+        // Add spacing between messages (8 characters per separator)
+        const totalWithSpacing = totalLength + messages.length * 16 // 8 chars per side spacing
+
+        // Calculate duration based on reading speed
+        // Using baseSpeed pixels per second for optimal readability
+        const settings = BAPENDA_TICKER_SETTINGS
+        let speedMultiplier = 1
+
+        // Adjust speed based on speed setting
+        switch (settings.speed) {
+            case "slow":
+                speedMultiplier = 0.6
+                break
+            case "fast":
+                speedMultiplier = 1.4
+                break
+            default: // 'normal'
+                speedMultiplier = 1
+        }
+
+        // Estimate character width (approximately 8-10 pixels per character for most fonts)
+        const avgCharWidth = 9
+        const estimatedWidth = totalWithSpacing * avgCharWidth
+
+        // Calculate duration: distance / speed
+        const baseDuration =
+            estimatedWidth / settings.baseSpeed / speedMultiplier
+
+        // Ensure duration is within reasonable bounds
+        const duration = Math.max(
+            settings.minDuration,
+            Math.min(settings.maxDuration, baseDuration)
+        )
+
+        return `${Math.round(duration)}s`
+    },
+
+    /**
+     * Update marquee speed setting and recalculate duration
+     * @param {string} speed - 'slow', 'normal', or 'fast'
+     */
+    setSpeed(speed) {
+        if (["slow", "normal", "fast"].includes(speed)) {
+            BAPENDA_TICKER_SETTINGS.speed = speed
+            // Trigger recalculation if dashboard is available
+            if (typeof window !== "undefined" && window.dashboard) {
+                window.dashboard.updateMarqueeContent()
+            }
+            return true
+        }
+        return false
+    },
+
+    /**
+     * Get current speed setting
+     */
+    getSpeed() {
+        return BAPENDA_TICKER_SETTINGS.speed
+    },
+
+    /**
+     * Get current calculated duration for debugging
+     */
+    getCurrentDuration() {
+        return this.calculateAnimationDuration()
     },
 }
 

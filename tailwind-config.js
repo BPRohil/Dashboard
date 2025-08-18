@@ -88,7 +88,7 @@ tailwind.config = {
                 'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
                 'float': 'float 3s ease-in-out infinite',
                 'shimmer': 'shimmer 2s linear infinite',
-                'marquee': 'marquee 30s linear infinite',
+                'marquee': 'marquee 60s linear infinite',
                 'spin-slow': 'spin 3s linear infinite',
                 'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
                 'scale-in': 'scaleIn 0.5s ease-out',
@@ -189,7 +189,7 @@ tailwind.config = {
                 },
                 marquee: {
                     '0%': {
-                        transform: 'translateX(100%)'
+                        transform: 'translateX(50%)'
                     },
                     '100%': {
                         transform: 'translateX(-100%)'

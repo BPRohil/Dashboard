@@ -299,12 +299,50 @@ class DashboardBapenda {
         // Apply dynamic animation duration based on content length
         const manager = typeof BapendaTickerManager !== 'undefined' ? BapendaTickerManager : MarqueeManager
         if (typeof manager !== 'undefined' && manager.calculateAnimationDuration) {
-            const duration = manager.calculateAnimationDuration()
-            // Apply duration to the marquee content element itself
-            if (this.elements.marqueeContent) {
-                this.elements.marqueeContent.style.animationDuration = duration
+            try {
+                const duration = manager.calculateAnimationDuration()
+                console.log(`Marquee: Calculated optimal duration: ${duration}`) // Debug log
+                
+                // Apply duration to the marquee content element
+                if (this.elements.marqueeContent) {
+                    // Reset animation to apply new duration
+                    this.elements.marqueeContent.style.animation = 'none'
+                    this.elements.marqueeContent.offsetHeight // Trigger reflow
+                    this.elements.marqueeContent.style.animation = `marquee ${duration} linear infinite`
+                }
+            } catch (error) {
+                console.warn('Failed to calculate dynamic marquee duration, using default:', error)
+                // Fallback to a reasonable default based on content length
+                this.applyFallbackDuration(messages)
             }
+        } else {
+            // Fallback when manager is not available
+            this.applyFallbackDuration(messages)
         }
+    }
+
+    /**
+     * Apply fallback duration calculation when dynamic calculation fails
+     */
+    applyFallbackDuration(messages) {
+        if (!this.elements.marqueeContent || !messages) return
+        
+        // Simple fallback: estimate based on total text length
+        const totalTextLength = messages.reduce((total, msg) => {
+            const textContent = msg.text.replace(/<[^>]*>/g, '') // Strip HTML tags
+            return total + textContent.length
+        }, 0)
+        
+        // Base duration: 40s for short content, up to 100s for very long content
+        const baseDuration = Math.max(40, Math.min(100, totalTextLength / 8))
+        const duration = `${Math.round(baseDuration)}s`
+        
+        console.log(`Marquee: Using fallback duration: ${duration}`) // Debug log
+        
+        // Apply the fallback duration
+        this.elements.marqueeContent.style.animation = 'none'
+        this.elements.marqueeContent.offsetHeight // Trigger reflow
+        this.elements.marqueeContent.style.animation = `marquee ${duration} linear infinite`
     }
 
 
