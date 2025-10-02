@@ -447,8 +447,8 @@ class DashboardBapenda {
 
         if (icon) {
             icon.className = this.state.isPlaying
-                ? "fas fa-pause"
-                : "fas fa-play"
+                ? "fas fa-pause w-4 h-4 flex items-center justify-center"
+                : "fas fa-play w-4 h-4 flex items-center justify-center"
         }
 
         if (this.state.isPlaying) {
@@ -472,8 +472,8 @@ class DashboardBapenda {
         const icon = this.elements.fullscreenBtn?.querySelector("i")
         if (icon) {
             icon.className = document.fullscreenElement
-                ? "fas fa-compress"
-                : "fas fa-expand"
+                ? "fas fa-compress w-4 h-4 flex items-center justify-center"
+                : "fas fa-expand w-4 h-4 flex items-center justify-center"
         }
     }
 
@@ -490,6 +490,11 @@ class DashboardBapenda {
     }
 
     handleKeyboard(e) {
+        // Ignore keyboard shortcuts when user is typing in input fields
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            return
+        }
+
         const actions = {
             ArrowLeft: () => {
                 this.state.currentSlide =

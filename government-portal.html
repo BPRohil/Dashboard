@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Pemerintah - Bapenda Rokan Hilir</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="glass-effect">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="assets/images/logoBapenda.png" alt="Logo Bapenda" class="h-12 w-12">
+                    <div>
+                        <h1 class="text-white text-xl font-bold">Portal Pemerintah</h1>
+                        <p class="text-white text-sm opacity-80">Bapenda Rokan Hilir</p>
+                    </div>
+                </div>
+                
+                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Keluar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <!-- Welcome Section -->
+        <div class="text-center mb-12">
+            <div class="glass-effect rounded-2xl p-8 mb-8">
+                <i class="fas fa-university text-white text-6xl mb-4"></i>
+                <h2 class="text-white text-3xl font-bold mb-4">Selamat Datang di Portal Pemerintah</h2>
+                <p class="text-white text-lg opacity-90">Sistem Informasi Manajemen Badan Pendapatan Daerah Rokan Hilir</p>
+            </div>
+        </div>
+
+        <!-- Service Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Tax Management -->
+            <div class="glass-effect rounded-xl p-6 card-hover">
+                <div class="text-center">
+                    <div class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calculator text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white text-xl font-semibold mb-3">Manajemen Pajak</h3>
+                    <p class="text-white opacity-80 mb-4">Kelola data pajak daerah dan monitoring pembayaran</p>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Akses
+                    </button>
+                </div>
+            </div>
+
+            <!-- Revenue Reports -->
+            <div class="glass-effect rounded-xl p-6 card-hover">
+                <div class="text-center">
+                    <div class="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white text-xl font-semibold mb-3">Laporan Pendapatan</h3>
+                    <p class="text-white opacity-80 mb-4">Analisis dan laporan pendapatan daerah</p>
+                    <button class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Akses
+                    </button>
+                </div>
+            </div>
+
+            <!-- Taxpayer Database -->
+            <div class="glass-effect rounded-xl p-6 card-hover">
+                <div class="text-center">
+                    <div class="bg-purple-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white text-xl font-semibold mb-3">Database Wajib Pajak</h3>
+                    <p class="text-white opacity-80 mb-4">Kelola data dan profil wajib pajak</p>
+                    <button class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Akses
+                    </button>
+                </div>
+            </div>
+
+            <!-- Document Management -->
+            <div class="glass-effect rounded-xl p-6 card-hover">
+                <div class="text-center">
+                    <div class="bg-orange-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-file-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white text-xl font-semibold mb-3">Manajemen Dokumen</h3>
+                    <p class="text-white opacity-80 mb-4">Arsip dan pengelolaan dokumen resmi</p>
+                    <button class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Akses
+                    </button>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="glass-effect rounded-xl p-6 card-hover">
+                <div class="text-center">
+                    <div class="bg-gray-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-cog text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white text-xl font-semibold mb-3">Pengaturan Sistem</h3>
+                    <p class="text-white opacity-80 mb-4">Konfigurasi dan pengaturan aplikasi</p>
+                    <button class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Akses
+                    </button>
+                </div>
+            </div>
+
+            <!-- Help & Support -->
+            <div class="glass-effect rounded-xl p-6 card-hover">
+                <div class="text-center">
+                    <div class="bg-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-question-circle text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-white text-xl font-semibold mb-3">Bantuan & Dukungan</h3>
+                    <p class="text-white opacity-80 mb-4">Panduan penggunaan dan dukungan teknis</p>
+                    <button class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Akses
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="mt-12">
+            <div class="glass-effect rounded-xl p-8">
+                <h3 class="text-white text-2xl font-bold mb-6 text-center">Statistik Cepat</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="text-white text-3xl font-bold">1,234</div>
+                        <div class="text-white opacity-80">Wajib Pajak Aktif</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-white text-3xl font-bold">Rp 2.5M</div>
+                        <div class="text-white opacity-80">Pendapatan Bulan Ini</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-white text-3xl font-bold">89%</div>
+                        <div class="text-white opacity-80">Tingkat Kepatuhan</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-white text-3xl font-bold">156</div>
+                        <div class="text-white opacity-80">Transaksi Hari Ini</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-effect mt-12">
+        <div class="container mx-auto px-6 py-6">
+            <div class="text-center">
+                <p class="text-white opacity-80">
+                    © 2024 Badan Pendapatan Daerah Rokan Hilir. Semua hak dilindungi.
+                </p>
+                <p class="text-white opacity-60 text-sm mt-2">
+                    Portal Pemerintah - Sistem Informasi Manajemen
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Logout function
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin keluar dari portal pemerintah?')) {
+                // Clear any authentication data
+                localStorage.removeItem('authAttempts')
+                localStorage.removeItem('lastAttemptTime')
+                
+                // Redirect back to main dashboard
+                window.location.href = 'index.html'
+            }
+        }
+
+        // Add click handlers for service cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceButtons = document.querySelectorAll('.card-hover button')
+            
+            serviceButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const serviceName = this.closest('.card-hover').querySelector('h3').textContent
+                    alert(`Fitur "${serviceName}" akan segera tersedia.\n\nSilakan hubungi administrator untuk informasi lebih lanjut.`)
+                })
+            })
+        })
+
+        // Add some interactive animations
+        document.addEventListener('mousemove', function(e) {
+            const cards = document.querySelectorAll('.card-hover')
+            
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect()
+                const x = e.clientX - rect.left
+                const y = e.clientY - rect.top
+                
+                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    const centerX = rect.width / 2
+                    const centerY = rect.height / 2
+                    const rotateX = (y - centerY) / 10
+                    const rotateY = (centerX - x) / 10
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`
+                }
+            })
+        })
+
+        document.addEventListener('mouseleave', function() {
+            const cards = document.querySelectorAll('.card-hover')
+            cards.forEach(card => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)'
+            })
+        })
+    </script>
+</body>
+</html>

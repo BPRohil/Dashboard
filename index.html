@@ -272,7 +272,7 @@
                     class="bg-white border border-gray-200 p-3 rounded-full text-gray-700 hover:bg-gray-50 hover:shadow-lg transition-all duration-300 shadow-sm"
                     title="Play/Pause"
                 >
-                    <i class="fas fa-pause"></i>
+                    <i class="fas fa-pause w-4 h-4 flex items-center justify-center"></i>
                 </button>
 
                 <!-- Fullscreen toggle control -->
@@ -281,7 +281,17 @@
                     class="bg-white border border-gray-200 p-3 rounded-full text-gray-700 hover:bg-gray-50 hover:shadow-lg transition-all duration-300 shadow-sm"
                     title="Fullscreen"
                 >
-                    <i class="fas fa-expand"></i>
+                    <i class="fas fa-expand w-4 h-4 flex items-center justify-center"></i>
+                </button>
+
+                <!-- Government portal access control -->
+                <button
+                    id="governmentBtn"
+                    class="bg-white border border-gray-200 p-3 rounded-full text-gray-700 hover:bg-gray-50 hover:shadow-lg transition-all duration-300 shadow-sm"
+                    title="Government Portal"
+                    onclick="showPasswordModal()"
+                >
+                    <i class="fas fa-university w-4 h-4 flex items-center justify-center"></i>
                 </button>
                 <!-- ========================================
                      AUDIO PLAYER CONTROL
@@ -294,7 +304,7 @@
                     onclick="toggleAudioPlayer()"
                 >
                     <!-- Audio control icon -->
-                    <i id="audioBtnIcon" class="fas fa-music text-blue-600"></i>
+                    <i id="audioBtnIcon" class="fas fa-music text-slate-900 w-4 h-4 flex items-center justify-center"></i>
 
                     <!-- Expandable audio player box -->
                     <div
@@ -351,13 +361,13 @@
                         audioBox.style.display = "flex"
                         audioBox.style.visibility = "visible"
                         audioBox.style.opacity = "1"
-                        icon.className = "fas fa-times text-red-500"
+                        icon.className = "fas fa-times text-red-500 w-4 h-4 flex items-center justify-center"
                     } else {
                         // Hide audio player
                         audioBox.style.display = "none"
                         audioBox.style.visibility = "hidden"
                         audioBox.style.opacity = "0"
-                        icon.className = "fas fa-music text-blue-600"
+                        icon.className = "fas fa-music text-slate-900 w-4 h-4 flex items-center justify-center"
                     }
                 }
 
@@ -370,7 +380,236 @@
                     audioBox.style.visibility = "visible"
                     audioBox.style.opacity = "1"
                 })
+
+                // ========================================
+                // PASSWORD AUTHENTICATION FUNCTIONS
+                // Purpose: Secure government portal access
+                // ========================================
+
+                // Security configuration
+                const GOVERNMENT_CONFIG = {
+                    // Hash of the correct password (SHA-256 of "bapenda2024")
+                    passwordHash: "45e53d1a6a1573a251d5ef78d9645a891f1c36fb362fcc48ef95865918ecf6b8",
+                    maxAttempts: 3,
+                    lockoutTime: 300000, // 5 minutes in milliseconds
+                    targetUrl: "government-portal.html"
+                }
+
+                // Track authentication attempts
+                let authAttempts = parseInt(localStorage.getItem('authAttempts') || '0')
+                let lastAttemptTime = parseInt(localStorage.getItem('lastAttemptTime') || '0')
+
+                // Reset authentication attempts (for debugging)
+                function resetAuthAttempts() {
+                    authAttempts = 0
+                    localStorage.removeItem('authAttempts')
+                    localStorage.removeItem('lastAttemptTime')
+                    console.log('Authentication attempts reset')
+                }
+
+                /**
+                 * Show password authentication modal
+                 */
+                function showPasswordModal() {
+                    // Check if user is locked out
+                    const currentTime = Date.now()
+                    if (authAttempts >= GOVERNMENT_CONFIG.maxAttempts) {
+                        const timeSinceLastAttempt = currentTime - lastAttemptTime
+                        if (timeSinceLastAttempt < GOVERNMENT_CONFIG.lockoutTime) {
+                            const remainingTime = Math.ceil((GOVERNMENT_CONFIG.lockoutTime - timeSinceLastAttempt) / 60000)
+                            showError(`Too many failed attempts. Please try again in ${remainingTime} minutes.`)
+                            return
+                        } else {
+                            // Reset attempts after lockout period
+                            authAttempts = 0
+                            localStorage.setItem('authAttempts', '0')
+                        }
+                    }
+
+                    const modal = document.getElementById('passwordModal')
+                    const passwordInput = document.getElementById('passwordInput')
+                    const errorMessage = document.getElementById('errorMessage')
+                    
+                    // Reset form
+                    passwordInput.value = ''
+                    errorMessage.classList.add('hidden')
+                    
+                    // Show modal
+                    modal.classList.remove('hidden')
+                    modal.classList.add('flex')
+                    
+                    // Focus on password input
+                    setTimeout(() => passwordInput.focus(), 100)
+                }
+
+                /**
+                 * Close password authentication modal
+                 */
+                function closePasswordModal() {
+                    const modal = document.getElementById('passwordModal')
+                    const passwordInput = document.getElementById('passwordInput')
+                    const errorMessage = document.getElementById('errorMessage')
+                    
+                    // Clear form and hide modal
+                    passwordInput.value = ''
+                    errorMessage.classList.add('hidden')
+                    modal.classList.remove('flex')
+                    modal.classList.add('hidden')
+                }
+
+                /**
+                 * Validate password and handle authentication
+                 */
+                async function validatePassword(event) {
+                    event.preventDefault()
+                    
+                    const passwordInput = document.getElementById('passwordInput')
+                    const password = passwordInput.value.trim()
+                    
+                    if (!password) {
+                        showError('Please enter a password.')
+                        return
+                    }
+
+                    try {
+                        // Hash the entered password using Web Crypto API
+                        const encoder = new TextEncoder()
+                        const data = encoder.encode(password)
+                        const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+                        const hashArray = Array.from(new Uint8Array(hashBuffer))
+                        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+
+                        // Compare with stored hash
+                        if (hashHex === GOVERNMENT_CONFIG.passwordHash) {
+                            // Successful authentication
+                            authAttempts = 0
+                            localStorage.setItem('authAttempts', '0')
+                            localStorage.removeItem('lastAttemptTime')
+                            
+                            // Close modal and redirect
+                            closePasswordModal()
+                            redirectToGovernmentPortal()
+                        } else {
+                            // Failed authentication
+                            authAttempts++
+                            lastAttemptTime = Date.now()
+                            localStorage.setItem('authAttempts', authAttempts.toString())
+                            localStorage.setItem('lastAttemptTime', lastAttemptTime.toString())
+                            
+                            const remainingAttempts = GOVERNMENT_CONFIG.maxAttempts - authAttempts
+                            if (remainingAttempts > 0) {
+                                showError(`Invalid password. ${remainingAttempts} attempts remaining.`)
+                            } else {
+                                showError('Too many failed attempts. Access locked for 5 minutes.')
+                                closePasswordModal()
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Authentication error:', error)
+                        showError('Authentication failed. Please try again.')
+                    }
+                    
+                    // Clear password input for security
+                    passwordInput.value = ''
+                }
+
+                /**
+                 * Show error message in modal
+                 */
+                function showError(message) {
+                    const errorMessage = document.getElementById('errorMessage')
+                    const errorText = document.getElementById('errorText')
+                    
+                    errorText.textContent = message
+                    errorMessage.classList.remove('hidden')
+                }
+
+                /**
+                 * Redirect to government portal
+                 */
+                function redirectToGovernmentPortal() {
+                    // Show loading state
+                    const governmentBtn = document.getElementById('governmentBtn')
+                    const originalHTML = governmentBtn.innerHTML
+                    governmentBtn.innerHTML = '<i class="fas fa-spinner fa-spin w-4 h-4 flex items-center justify-center"></i>'
+                    governmentBtn.disabled = true
+                    
+                    // Simulate redirect (replace with actual URL)
+                    setTimeout(() => {
+                        window.location.href = GOVERNMENT_CONFIG.targetUrl
+                    }, 1000)
+                }
+
+                // Close modal when clicking outside
+                document.addEventListener('click', function(event) {
+                    const modal = document.getElementById('passwordModal')
+                    if (event.target === modal) {
+                        closePasswordModal()
+                    }
+                })
+
+                // Close modal with Escape key
+                document.addEventListener('keydown', function(event) {
+                    if (event.key === 'Escape') {
+                        const modal = document.getElementById('passwordModal')
+                        if (!modal.classList.contains('hidden')) {
+                            closePasswordModal()
+                        }
+                    }
+                })
             </script>
+        </div>
+
+        <!-- ========================================
+             PASSWORD AUTHENTICATION MODAL
+             Purpose: Secure authentication for government portal access
+             ======================================== -->
+        <div id="passwordModal" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-2xl">
+                <div class="text-center mb-6">
+                    <i class="fas fa-university text-blue-600 text-4xl mb-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Government Portal Access</h2>
+                    <p class="text-gray-600">Please enter your authentication password</p>
+                </div>
+                
+                <form id="passwordForm" onsubmit="validatePassword(event)">
+                    <div class="mb-6">
+                        <label for="passwordInput" class="block text-sm font-medium text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            id="passwordInput"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="Enter password"
+                            required
+                            autocomplete="off"
+                        />
+                    </div>
+                    
+                    <div id="errorMessage" class="hidden mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        <span id="errorText">Invalid password. Please try again.</span>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <button
+                            type="button"
+                            onclick="closePasswordModal()"
+                            class="flex-1 px-4 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors duration-200 font-medium"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+                        >
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Access Portal
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- ========================================
