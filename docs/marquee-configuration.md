@@ -4,15 +4,15 @@ This document explains how to manage and configure the BAPENDA ticker messages i
 
 ## Files Overview
 
-- **`marquee-config.js`** - Main configuration file for all marquee messages
-- **`dashboard.js`** - Main dashboard script that uses the marquee config
+- **`src/js/marquee-config.js`** - Main configuration file for all marquee messages
+- **`src/js/dashboard.js`** - Main dashboard script that uses the marquee config
 - **`index.html`** - HTML file that loads both scripts
 
 ## How to Manage Marquee Messages
 
-### 1. Edit Messages in `marquee-config.js`
+### 1. Edit Messages in `src/js/marquee-config.js`
 
-Open `marquee-config.js` and modify the message sets:
+Open `src/js/marquee-config.js` and modify the message sets:
 
 ```javascript
 const BAPENDA_TICKER_MESSAGES = {
@@ -158,7 +158,7 @@ BAPENDA_TICKER_SETTINGS.animationDuration = '30s';
 
 ## Tips
 
-1. **Test Changes**: After editing `marquee-config.js`, refresh the page to see changes
+1. **Test Changes**: After editing `src/js/marquee-config.js`, refresh the page to see changes
 2. **Backup**: Keep a backup of your config before making major changes
 3. **HTML Content**: You can use HTML in the `text` field for rich formatting
 4. **Icons**: Use Font Awesome classes for icons, or leave empty for no icon
@@ -167,14 +167,14 @@ BAPENDA_TICKER_SETTINGS.animationDuration = '30s';
 ## Troubleshooting
 
 - **Messages not showing**: Check browser console for errors
-- **Config not loading**: Ensure `marquee-config.js` is loaded before `dashboard.js`
+- **Config not loading**: Ensure `src/js/marquee-config.js` is loaded before `src/js/dashboard.js`
 - **Styling issues**: Verify Tailwind CSS classes are correct
 - **JavaScript errors**: Check that the config file syntax is valid JSON
 
 ## Example: Adding a New Revenue Item
 
 ```javascript
-// In marquee-config.js, add to the financial array:
+// In src/js/marquee-config.js, add to the financial array:
 {
     icon: "",
     text: '<span class="inline-flex items-center space-x-2"><span class="text-white font-bold">PAJAK</span><span class="text-white font-semibold">Rp1.234.56M</span><span class="text-green-400 font-medium">+12.34</span><span class="text-green-400 font-medium">(+2.1%)</span></span>',

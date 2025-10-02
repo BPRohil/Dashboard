@@ -10,9 +10,9 @@ tailwind.config = {
     
     // Optimize content scanning
     content: [
-        './index.html',
-        './dashboard.js',
-        './**/*.{html,js}'
+        '../index.html',
+        '../src/js/dashboard.js',
+        '../**/*.{html,js}'
     ],
     
     // Enhanced theme configuration
