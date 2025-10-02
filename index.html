@@ -379,6 +379,114 @@
                     audioBox.style.display = "flex"
                     audioBox.style.visibility = "visible"
                     audioBox.style.opacity = "1"
+                    
+                    // Check for security redirect reasons
+                    checkSecurityRedirect()
+                })
+
+                /**
+                 * Check for security redirect and display appropriate message
+                 */
+                function checkSecurityRedirect() {
+                    const redirectReason = sessionStorage.getItem('security_redirect_reason')
+                    
+                    if (redirectReason) {
+                        // Clear the redirect reason
+                        sessionStorage.removeItem('security_redirect_reason')
+                        
+                        // Show security message based on reason
+                        const messages = {
+                            'unauthorized': 'Akses tidak sah terdeteksi. Silakan login melalui tombol Government Portal.',
+                            'expired': 'Sesi Anda telah berakhir. Silakan login kembali untuk mengakses portal pemerintah.',
+                            'invalid': 'Token autentikasi tidak valid. Silakan login kembali.',
+                            'direct_access': 'Akses langsung ke portal pemerintah tidak diizinkan. Gunakan tombol Government Portal di bawah ini.'
+                        }
+                        
+                        const message = messages[redirectReason] || messages['unauthorized']
+                        
+                        // Show security alert with custom styling
+                        setTimeout(() => {
+                            showSecurityAlert(message, redirectReason)
+                        }, 1000) // Delay to ensure page is fully loaded
+                    }
+                }
+
+                /**
+                 * Show security alert with custom styling
+                 */
+                function showSecurityAlert(message, type) {
+                    // Create security alert modal
+                    const alertModal = document.createElement('div')
+                    alertModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'
+                    alertModal.innerHTML = `
+                        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-2xl border-l-4 border-red-500">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-shield-alt text-red-500 text-3xl mr-4"></i>
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800">Peringatan Keamanan</h3>
+                                    <p class="text-sm text-gray-600">Security Alert</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-700 mb-6 leading-relaxed">${message}</p>
+                            <div class="flex justify-end">
+                                <button onclick="closeSecurityAlert()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 font-medium">
+                                    <i class="fas fa-check mr-2"></i>
+                                    Mengerti
+                                </button>
+                            </div>
+                        </div>
+                    `
+                    
+                    // Add to page
+                    document.body.appendChild(alertModal)
+                    
+                    // Store reference for closing
+                    window.currentSecurityAlert = alertModal
+                }
+
+                /**
+                 * Close security alert
+                 */
+                function closeSecurityAlert() {
+                    if (window.currentSecurityAlert) {
+                        document.body.removeChild(window.currentSecurityAlert)
+                        window.currentSecurityAlert = null
+                    }
+                }
+
+                /**
+                 * Enhanced security monitoring
+                 */
+                function initializeSecurityMonitoring() {
+                    // Monitor for suspicious activity
+                    let suspiciousActivity = 0
+                    
+                    // Track rapid government button clicks (potential brute force)
+                    let lastClickTime = 0
+                    const originalShowPasswordModal = showPasswordModal
+                    
+                    showPasswordModal = function() {
+                        const currentTime = Date.now()
+                        if (currentTime - lastClickTime < 1000) { // Less than 1 second between clicks
+                            suspiciousActivity++
+                            if (suspiciousActivity > 5) {
+                                showSecurityAlert('Aktivitas mencurigakan terdeteksi. Akses dibatasi sementara.', 'suspicious')
+                                return
+                            }
+                        }
+                        lastClickTime = currentTime
+                        originalShowPasswordModal()
+                    }
+                    
+                    // Clear suspicious activity counter periodically
+                    setInterval(() => {
+                        suspiciousActivity = Math.max(0, suspiciousActivity - 1)
+                    }, 30000) // Reduce by 1 every 30 seconds
+                }
+
+                // Initialize security monitoring when page loads
+                document.addEventListener('DOMContentLoaded', function() {
+                    initializeSecurityMonitoring()
                 })
 
                 // ========================================
@@ -388,8 +496,8 @@
 
                 // Security configuration
                 const GOVERNMENT_CONFIG = {
-                    // Hash of the correct password (SHA-256 of "bapenda2024")
-                    passwordHash: "45e53d1a6a1573a251d5ef78d9645a891f1c36fb362fcc48ef95865918ecf6b8",
+                    // Hash of the correct password (SHA-256 of "bapendarohiljaya1")
+                    passwordHash: "c7cb3d1e4144eaa2aef99daf10a1e1e0614dfa0f39e334d2d6ea045b152974e4",
                     maxAttempts: 3,
                     lockoutTime: 300000, // 5 minutes in milliseconds
                     targetUrl: "government-portal.html"
@@ -458,6 +566,50 @@
                 }
 
                 /**
+                 * Generate secure authentication token
+                 */
+                function generateSecureToken() {
+                    const timestamp = Date.now()
+                    const randomBytes = new Uint8Array(32)
+                    crypto.getRandomValues(randomBytes)
+                    const randomString = Array.from(randomBytes, byte => byte.toString(16).padStart(2, '0')).join('')
+                    return btoa(`${timestamp}_${randomString}_gov_portal`).replace(/[+/=]/g, '')
+                }
+
+                /**
+                 * Set authentication session data
+                 */
+                function setAuthenticationSession() {
+                    const secureToken = generateSecureToken()
+                    const timestamp = Date.now()
+                    
+                    // Store authentication data
+                    localStorage.setItem('gov_portal_session', secureToken)
+                    localStorage.setItem('gov_portal_token', secureToken)
+                    localStorage.setItem('gov_portal_timestamp', timestamp.toString())
+                    
+                    // Store authentication source for additional security
+                    sessionStorage.setItem('auth_source', 'dashboard_login')
+                    sessionStorage.setItem('auth_time', timestamp.toString())
+                    
+                    console.log('Security: Authentication session established')
+                    return secureToken
+                }
+
+                /**
+                 * Clear all authentication data
+                 */
+                function clearAuthenticationData() {
+                    localStorage.removeItem('gov_portal_session')
+                    localStorage.removeItem('gov_portal_token')
+                    localStorage.removeItem('gov_portal_timestamp')
+                    localStorage.removeItem('authAttempts')
+                    localStorage.removeItem('lastAttemptTime')
+                    sessionStorage.removeItem('auth_source')
+                    sessionStorage.removeItem('auth_time')
+                }
+
+                /**
                  * Validate password and handle authentication
                  */
                 async function validatePassword(event) {
@@ -486,6 +638,12 @@
                             localStorage.setItem('authAttempts', '0')
                             localStorage.removeItem('lastAttemptTime')
                             
+                            // Generate and set secure authentication session
+                            const authToken = setAuthenticationSession()
+                            
+                            // Log successful authentication
+                            console.log('Authentication successful, token generated:', authToken.substring(0, 20) + '...')
+                            
                             // Close modal and redirect
                             closePasswordModal()
                             redirectToGovernmentPortal()
@@ -495,6 +653,9 @@
                             lastAttemptTime = Date.now()
                             localStorage.setItem('authAttempts', authAttempts.toString())
                             localStorage.setItem('lastAttemptTime', lastAttemptTime.toString())
+                            
+                            // Clear any existing authentication data on failed attempt
+                            clearAuthenticationData()
                             
                             const remainingAttempts = GOVERNMENT_CONFIG.maxAttempts - authAttempts
                             if (remainingAttempts > 0) {
@@ -507,6 +668,9 @@
                     } catch (error) {
                         console.error('Authentication error:', error)
                         showError('Authentication failed. Please try again.')
+                        
+                        // Clear authentication data on error
+                        clearAuthenticationData()
                     }
                     
                     // Clear password input for security

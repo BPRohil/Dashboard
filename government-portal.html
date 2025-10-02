@@ -1,255 +1,905 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Pemerintah - Bapenda Rokan Hilir</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Custom Styles -->
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <header class="glass-effect">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <img src="assets/images/logoBapenda.png" alt="Logo Bapenda" class="h-12 w-12">
-                    <div>
-                        <h1 class="text-white text-xl font-bold">Portal Pemerintah</h1>
-                        <p class="text-white text-sm opacity-80">Bapenda Rokan Hilir</p>
-                    </div>
-                </div>
-                
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
-                    <i class="fas fa-sign-out-alt mr-2"></i>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Portal Pemerintah - Bapenda Rokan Hilir</title>
+
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <!-- Font Awesome -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+
+        <!-- Google Fonts -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Custom Styles - Claude AI Inspired Design -->
+        <style>
+            * {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+                    "Droid Sans", "Helvetica Neue", sans-serif;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+
+            body {
+                background: #f5f3f0;
+                min-height: 100vh;
+                color: #5a5a5a;
+                line-height: 1.6;
+            }
+
+            /* Reference Image Inspired Cards */
+            .claude-card {
+                background: #fefcfa;
+                border: 1px solid #e8e2db;
+                border-radius: 16px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+                overflow: hidden;
+            }
+
+            .claude-card:hover {
+                border-color: #d97706;
+                box-shadow: 0 8px 25px rgba(217, 119, 6, 0.12);
+                transform: translateY(-2px);
+            }
+
+            .service-icon {
+                width: 72px;
+                height: 72px;
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 24px;
+                background: linear-gradient(
+                    135deg,
+                    #fff7ed 0%,
+                    #fed7aa 50%,
+                    #f59e0b 100%
+                );
+                border: 2px solid #fbbf24;
+                box-shadow: 0 8px 25px rgba(251, 191, 36, 0.25),
+                    0 4px 12px rgba(217, 119, 6, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                position: relative;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                overflow: hidden;
+            }
+
+            .service-icon::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.4) 0%,
+                    transparent 50%
+                );
+                border-radius: 18px;
+                pointer-events: none;
+            }
+
+            .service-icon:hover {
+                transform: translateY(-4px) scale(1.05);
+                box-shadow: 0 12px 35px rgba(251, 191, 36, 0.35),
+                    0 8px 20px rgba(217, 119, 6, 0.25),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                border-color: #f59e0b;
+            }
+
+            /* Reference Image Inspired Primary Button */
+            .claude-btn-primary {
+                background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+                color: white;
+                border: none;
+                border-radius: 10px;
+                padding: 10px 20px;
+                font-weight: 600;
+                font-size: 14px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 36px;
+                box-sizing: border-box;
+                letter-spacing: -0.01em;
+                box-shadow: 0 2px 8px rgba(217, 119, 6, 0.25);
+                width: auto;
+                min-width: 120px;
+            }
+
+            .claude-btn-primary:hover {
+                background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 16px rgba(217, 119, 6, 0.35);
+            }
+
+            .claude-btn-primary:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 8px rgba(217, 119, 6, 0.25);
+            }
+
+            /* Reference Image Inspired Page Container */
+            .claude-page-container {
+                position: relative;
+                min-height: 100vh;
+                background: #f5f3f0;
+                padding: 0;
+            }
+
+            /* Claude-style Main Content */
+            .claude-main-content {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 40px 24px;
+            }
+
+            /* Claude-style Welcome Section */
+            .claude-welcome {
+                text-align: center;
+                margin-bottom: 24px;
+                padding: 0 0;
+            }
+
+            .claude-welcome h1 {
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: #1a1a1a;
+                margin-bottom: 16px;
+                letter-spacing: -0.02em;
+                line-height: 1.2;
+            }
+
+            .claude-welcome p {
+                font-size: 1.125rem;
+                color: #6b6b6b;
+                max-width: 600px;
+                margin: 0 auto;
+                line-height: 1.6;
+            }
+
+            .claude-icon-container {
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(135deg, #fef3e2 0%, #fed7aa 100%);
+                border: 2px solid #f3e8d0;
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 24px;
+                box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);
+            }
+
+            /* Claude-style Logout Container */
+            .claude-logout-container {
+                position: absolute;
+                top: 32px;
+                right: 32px;
+                z-index: 1000;
+            }
+
+            /* Reference Image Inspired Logout Button */
+            .claude-logout-btn {
+                background: #fefcfa;
+                color: #78716c;
+                padding: 10px 16px;
+                border: 1px solid #e8e2db;
+                border-radius: 10px;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 90px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+                user-select: none;
+                letter-spacing: -0.01em;
+            }
+
+            .claude-logout-btn:hover {
+                background: #f5f1eb;
+                border-color: #d6c7b8;
+                color: #57534e;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            .claude-logout-btn:active {
+                transform: translateY(0);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            }
+
+            /* Claude-style Grid Layout */
+            .claude-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 24px;
+                margin-bottom: 64px;
+            }
+
+            /* Reference Image Inspired Statistics Section */
+            .claude-stats-section {
+                margin-top: 32px;
+                margin-bottom: 64px;
+                padding: 48px 0;
+                background: #fefcfa;
+                border-radius: 20px;
+                border: 1px solid #e8e2db;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            }
+
+            .claude-stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 32px;
+                padding: 0 32px;
+            }
+
+            .claude-stat-card {
+                text-align: center;
+                padding: 24px 16px;
+            }
+
+            .claude-stat-number {
+                font-size: 2.25rem;
+                font-weight: 700;
+                color: #d97706;
+                margin-bottom: 8px;
+                letter-spacing: -0.02em;
+            }
+
+            .claude-stat-label {
+                font-size: 0.875rem;
+                color: #78716c;
+                font-weight: 500;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .claude-main-content {
+                    padding: 24px 16px;
+                }
+
+                .claude-logout-container {
+                    top: 20px;
+                    right: 20px;
+                }
+
+                .claude-welcome h1 {
+                    font-size: 2rem;
+                }
+
+                .claude-welcome p {
+                    font-size: 1rem;
+                }
+
+                .claude-icon-container {
+                    width: 64px;
+                    height: 64px;
+                }
+
+                .claude-grid {
+                    grid-template-columns: 1fr;
+                    gap: 16px;
+                }
+
+                .claude-stats-section {
+                    margin-top: 48px;
+                    padding: 32px 0;
+                }
+
+                .claude-stats-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 24px;
+                    padding: 0 16px;
+                }
+
+                .claude-stat-number {
+                    font-size: 1.875rem;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .claude-main-content {
+                    padding: 16px 12px;
+                }
+
+                .claude-logout-container {
+                    top: 16px;
+                    right: 16px;
+                }
+
+                .claude-logout-btn {
+                    padding: 8px 12px;
+                    font-size: 13px;
+                    min-width: 80px;
+                }
+
+                .claude-welcome h1 {
+                    font-size: 1.75rem;
+                }
+
+                .claude-stats-grid {
+                    grid-template-columns: 1fr;
+                    gap: 16px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Claude-style Page Container -->
+        <div class="claude-page-container">
+            <!-- Claude-style Logout Button -->
+            <div class="claude-logout-container">
+                <button onclick="logout()" class="claude-logout-btn">
+                    <i
+                        class="fas fa-sign-out-alt"
+                        style="margin-right: 8px"
+                    ></i>
                     Keluar
                 </button>
             </div>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-6 py-12">
-        <!-- Welcome Section -->
-        <div class="text-center mb-12">
-            <div class="glass-effect rounded-2xl p-8 mb-8">
-                <i class="fas fa-university text-white text-6xl mb-4"></i>
-                <h2 class="text-white text-3xl font-bold mb-4">Selamat Datang di Portal Pemerintah</h2>
-                <p class="text-white text-lg opacity-90">Sistem Informasi Manajemen Badan Pendapatan Daerah Rokan Hilir</p>
-            </div>
-        </div>
-
-        <!-- Service Cards Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Tax Management -->
-            <div class="glass-effect rounded-xl p-6 card-hover">
-                <div class="text-center">
-                    <div class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-calculator text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-white text-xl font-semibold mb-3">Manajemen Pajak</h3>
-                    <p class="text-white opacity-80 mb-4">Kelola data pajak daerah dan monitoring pembayaran</p>
-                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
-                        <i class="fas fa-arrow-right mr-2"></i>
-                        Akses
-                    </button>
+            <!-- Claude-style Main Content -->
+            <main class="claude-main-content">
+                <!-- Reference Image Inspired Welcome Section -->
+                <div class="claude-welcome">
+                    <img
+                        src="assets/images/logoBapenda.png"
+                        alt="Logo Bapenda"
+                        style="
+                            width: 100%;
+                            height: 160px;
+                            object-fit: contain;
+                            margin: 0 auto 0 auto;
+                            display: block;
+                        "
+                    />
                 </div>
-            </div>
 
-            <!-- Revenue Reports -->
-            <div class="glass-effect rounded-xl p-6 card-hover">
-                <div class="text-center">
-                    <div class="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-chart-line text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-white text-xl font-semibold mb-3">Laporan Pendapatan</h3>
-                    <p class="text-white opacity-80 mb-4">Analisis dan laporan pendapatan daerah</p>
-                    <button class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
-                        <i class="fas fa-arrow-right mr-2"></i>
-                        Akses
-                    </button>
-                </div>
-            </div>
-
-            <!-- Taxpayer Database -->
-            <div class="glass-effect rounded-xl p-6 card-hover">
-                <div class="text-center">
-                    <div class="bg-purple-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-users text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-white text-xl font-semibold mb-3">Database Wajib Pajak</h3>
-                    <p class="text-white opacity-80 mb-4">Kelola data dan profil wajib pajak</p>
-                    <button class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
-                        <i class="fas fa-arrow-right mr-2"></i>
-                        Akses
-                    </button>
-                </div>
-            </div>
-
-            <!-- Document Management -->
-            <div class="glass-effect rounded-xl p-6 card-hover">
-                <div class="text-center">
-                    <div class="bg-orange-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-file-alt text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-white text-xl font-semibold mb-3">Manajemen Dokumen</h3>
-                    <p class="text-white opacity-80 mb-4">Arsip dan pengelolaan dokumen resmi</p>
-                    <button class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
-                        <i class="fas fa-arrow-right mr-2"></i>
-                        Akses
-                    </button>
-                </div>
-            </div>
-
-            <!-- Settings -->
-            <div class="glass-effect rounded-xl p-6 card-hover">
-                <div class="text-center">
-                    <div class="bg-gray-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-cog text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-white text-xl font-semibold mb-3">Pengaturan Sistem</h3>
-                    <p class="text-white opacity-80 mb-4">Konfigurasi dan pengaturan aplikasi</p>
-                    <button class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
-                        <i class="fas fa-arrow-right mr-2"></i>
-                        Akses
-                    </button>
-                </div>
-            </div>
-
-            <!-- Help & Support -->
-            <div class="glass-effect rounded-xl p-6 card-hover">
-                <div class="text-center">
-                    <div class="bg-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-question-circle text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-white text-xl font-semibold mb-3">Bantuan & Dukungan</h3>
-                    <p class="text-white opacity-80 mb-4">Panduan penggunaan dan dukungan teknis</p>
-                    <button class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 w-full">
-                        <i class="fas fa-arrow-right mr-2"></i>
-                        Akses
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Stats -->
-        <div class="mt-12">
-            <div class="glass-effect rounded-xl p-8">
-                <h3 class="text-white text-2xl font-bold mb-6 text-center">Statistik Cepat</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="text-center">
-                        <div class="text-white text-3xl font-bold">1,234</div>
-                        <div class="text-white opacity-80">Wajib Pajak Aktif</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-white text-3xl font-bold">Rp 2.5M</div>
-                        <div class="text-white opacity-80">Pendapatan Bulan Ini</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-white text-3xl font-bold">89%</div>
-                        <div class="text-white opacity-80">Tingkat Kepatuhan</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-white text-3xl font-bold">156</div>
-                        <div class="text-white opacity-80">Transaksi Hari Ini</div>
+                <!-- Claude-style Statistics Section -->
+                <div class="claude-stats-section">
+                    <div class="claude-stats-grid">
+                        <div class="claude-stat-card">
+                            <div class="claude-stat-number">1,234</div>
+                            <div class="claude-stat-label">
+                                Wajib Pajak Aktif
+                            </div>
+                        </div>
+                        <div class="claude-stat-card">
+                            <div class="claude-stat-number">Rp 2.5M</div>
+                            <div class="claude-stat-label">
+                                Pendapatan Bulan Ini
+                            </div>
+                        </div>
+                        <div class="claude-stat-card">
+                            <div class="claude-stat-number">89%</div>
+                            <div class="claude-stat-label">
+                                Tingkat Kepatuhan
+                            </div>
+                        </div>
+                        <div class="claude-stat-card">
+                            <div class="claude-stat-number">156</div>
+                            <div class="claude-stat-label">
+                                Transaksi Hari Ini
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="glass-effect mt-12">
-        <div class="container mx-auto px-6 py-6">
-            <div class="text-center">
-                <p class="text-white opacity-80">
-                    © 2024 Badan Pendapatan Daerah Rokan Hilir. Semua hak dilindungi.
+                <!-- Claude-style Service Cards Grid -->
+                <div class="claude-grid">
+                    <!-- Tax Management -->
+                    <div class="claude-card" style="padding: 32px">
+                        <div style="text-align: center">
+                            <div class="service-icon">
+                                <i
+                                    class="fas fa-calculator"
+                                    style="
+                                        font-size: 1.75rem;
+                                        color: #92400e;
+                                        text-shadow: 0 1px 2px
+                                            rgba(0, 0, 0, 0.1);
+                                    "
+                                ></i>
+                            </div>
+                            <h3
+                                style="
+                                    font-size: 1.25rem;
+                                    font-weight: 600;
+                                    color: #1a1a1a;
+                                    margin-bottom: 24px;
+                                    letter-spacing: -0.01em;
+                                "
+                            >
+                                Manajemen Pajak
+                            </h3>
+                            <button class="claude-btn-primary">
+                                Akses
+                                <i
+                                    class="fas fa-arrow-right"
+                                    style="margin-left: 8px"
+                                ></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Revenue Reports -->
+                    <div class="claude-card" style="padding: 32px">
+                        <div style="text-align: center">
+                            <div class="service-icon">
+                                <i
+                                    class="fas fa-chart-line"
+                                    style="
+                                        font-size: 1.75rem;
+                                        color: #92400e;
+                                        text-shadow: 0 1px 2px
+                                            rgba(0, 0, 0, 0.1);
+                                    "
+                                ></i>
+                            </div>
+                            <h3
+                                style="
+                                    font-size: 1.25rem;
+                                    font-weight: 600;
+                                    color: #1a1a1a;
+                                    margin-bottom: 24px;
+                                    letter-spacing: -0.01em;
+                                "
+                            >
+                                Laporan Pendapatan
+                            </h3>
+                            <button class="claude-btn-primary">
+                                Akses
+                                <i
+                                    class="fas fa-arrow-right"
+                                    style="margin-left: 8px"
+                                ></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Taxpayer Database -->
+                    <div class="claude-card" style="padding: 32px">
+                        <div style="text-align: center">
+                            <div class="service-icon">
+                                <i
+                                    class="fas fa-users"
+                                    style="
+                                        font-size: 1.75rem;
+                                        color: #92400e;
+                                        text-shadow: 0 1px 2px
+                                            rgba(0, 0, 0, 0.1);
+                                    "
+                                ></i>
+                            </div>
+                            <h3
+                                style="
+                                    font-size: 1.25rem;
+                                    font-weight: 600;
+                                    color: #1a1a1a;
+                                    margin-bottom: 24px;
+                                    letter-spacing: -0.01em;
+                                "
+                            >
+                                Database Wajib Pajak
+                            </h3>
+                            <button class="claude-btn-primary">
+                                Akses
+                                <i
+                                    class="fas fa-arrow-right"
+                                    style="margin-left: 8px"
+                                ></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Document Management -->
+                    <div class="claude-card" style="padding: 32px">
+                        <div style="text-align: center">
+                            <div class="service-icon">
+                                <i
+                                    class="fas fa-file-alt"
+                                    style="
+                                        font-size: 1.75rem;
+                                        color: #92400e;
+                                        text-shadow: 0 1px 2px
+                                            rgba(0, 0, 0, 0.1);
+                                    "
+                                ></i>
+                            </div>
+                            <h3
+                                style="
+                                    font-size: 1.25rem;
+                                    font-weight: 600;
+                                    color: #1a1a1a;
+                                    margin-bottom: 24px;
+                                    letter-spacing: -0.01em;
+                                "
+                            >
+                                Manajemen Dokumen
+                            </h3>
+                            <button class="claude-btn-primary">
+                                Akses
+                                <i
+                                    class="fas fa-arrow-right"
+                                    style="margin-left: 8px"
+                                ></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Settings -->
+                    <div class="claude-card" style="padding: 32px">
+                        <div style="text-align: center">
+                            <div class="service-icon">
+                                <i
+                                    class="fas fa-cog"
+                                    style="
+                                        font-size: 1.75rem;
+                                        color: #92400e;
+                                        text-shadow: 0 1px 2px
+                                            rgba(0, 0, 0, 0.1);
+                                    "
+                                ></i>
+                            </div>
+                            <h3
+                                style="
+                                    font-size: 1.25rem;
+                                    font-weight: 600;
+                                    color: #1a1a1a;
+                                    margin-bottom: 24px;
+                                    letter-spacing: -0.01em;
+                                "
+                            >
+                                Pengaturan Sistem
+                            </h3>
+                            <button class="claude-btn-primary">
+                                Akses
+                                <i
+                                    class="fas fa-arrow-right"
+                                    style="margin-left: 8px"
+                                ></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Help & Support -->
+                    <div class="claude-card" style="padding: 32px">
+                        <div style="text-align: center">
+                            <div class="service-icon">
+                                <i
+                                    class="fas fa-question-circle"
+                                    style="
+                                        font-size: 1.75rem;
+                                        color: #92400e;
+                                        text-shadow: 0 1px 2px
+                                            rgba(0, 0, 0, 0.1);
+                                    "
+                                ></i>
+                            </div>
+                            <h3
+                                style="
+                                    font-size: 1.25rem;
+                                    font-weight: 600;
+                                    color: #1a1a1a;
+                                    margin-bottom: 24px;
+                                    letter-spacing: -0.01em;
+                                "
+                            >
+                                Bantuan & Dukungan
+                            </h3>
+                            <button class="claude-btn-primary">
+                                Akses
+                                <i
+                                    class="fas fa-arrow-right"
+                                    style="margin-left: 8px"
+                                ></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Copyright Text -->
+            <div
+                style="
+                    text-align: center;
+                    margin-top: 80px;
+                    padding: 32px 0;
+                    color: #78716c;
+                    font-size: 0.875rem;
+                "
+            >
+                <p>
+                    © 2025 Badan Pendapatan Daerah Rokan Hilir. Semua hak
+                    dilindungi.
                 </p>
-                <p class="text-white opacity-60 text-sm mt-2">
-                    Portal Pemerintah - Sistem Informasi Manajemen
-                </p>
             </div>
         </div>
-    </footer>
+        <!-- End of page-container -->
 
-    <script>
-        // Logout function
-        function logout() {
-            if (confirm('Apakah Anda yakin ingin keluar dari portal pemerintah?')) {
-                // Clear any authentication data
-                localStorage.removeItem('authAttempts')
-                localStorage.removeItem('lastAttemptTime')
-                
-                // Redirect back to main dashboard
-                window.location.href = 'index.html'
+        <script>
+            // ========================================
+            // SECURITY AUTHENTICATION SYSTEM
+            // Purpose: Prevent unauthorized access to government portal
+            // ========================================
+
+            // Security configuration
+            const SECURITY_CONFIG = {
+                sessionKey: "gov_portal_session",
+                tokenKey: "gov_portal_token",
+                timestampKey: "gov_portal_timestamp",
+                sessionTimeout: 1800000, // 30 minutes in milliseconds
+                requiredOrigin: "index.html",
             }
-        }
 
-        // Add click handlers for service cards
-        document.addEventListener('DOMContentLoaded', function() {
-            const serviceButtons = document.querySelectorAll('.card-hover button')
-            
-            serviceButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const serviceName = this.closest('.card-hover').querySelector('h3').textContent
-                    alert(`Fitur "${serviceName}" akan segera tersedia.\n\nSilakan hubungi administrator untuk informasi lebih lanjut.`)
+            /**
+             * Generate secure session token
+             */
+            function generateSecureToken() {
+                const timestamp = Date.now()
+                const randomBytes = new Uint8Array(32)
+                crypto.getRandomValues(randomBytes)
+                const randomString = Array.from(randomBytes, (byte) =>
+                    byte.toString(16).padStart(2, "0")
+                ).join("")
+                return btoa(`${timestamp}_${randomString}_gov_portal`).replace(
+                    /[+/=]/g,
+                    ""
+                )
+            }
+
+            /**
+             * Validate authentication session
+             */
+            function validateAuthentication() {
+                try {
+                    const sessionToken = localStorage.getItem(
+                        SECURITY_CONFIG.sessionKey
+                    )
+                    const storedToken = localStorage.getItem(
+                        SECURITY_CONFIG.tokenKey
+                    )
+                    const timestamp = parseInt(
+                        localStorage.getItem(SECURITY_CONFIG.timestampKey) ||
+                            "0"
+                    )
+                    const currentTime = Date.now()
+
+                    // Check if all required authentication data exists
+                    if (!sessionToken || !storedToken || !timestamp) {
+                        console.warn("Security: Missing authentication data")
+                        return false
+                    }
+
+                    // Check session timeout
+                    if (
+                        currentTime - timestamp >
+                        SECURITY_CONFIG.sessionTimeout
+                    ) {
+                        console.warn("Security: Session expired")
+                        clearAuthenticationData()
+                        return false
+                    }
+
+                    // Validate token format and integrity
+                    try {
+                        const decodedToken = atob(sessionToken)
+                        if (
+                            !decodedToken.includes("gov_portal") ||
+                            decodedToken.length < 20
+                        ) {
+                            console.warn("Security: Invalid token format")
+                            return false
+                        }
+                    } catch (e) {
+                        console.warn("Security: Token decode error")
+                        return false
+                    }
+
+                    // Additional security: Check if tokens match
+                    if (sessionToken !== storedToken) {
+                        console.warn("Security: Token mismatch detected")
+                        return false
+                    }
+
+                    console.log(
+                        "Security: Authentication validated successfully"
+                    )
+                    return true
+                } catch (error) {
+                    console.error(
+                        "Security: Authentication validation error:",
+                        error
+                    )
+                    return false
+                }
+            }
+
+            /**
+             * Clear all authentication data
+             */
+            function clearAuthenticationData() {
+                localStorage.removeItem(SECURITY_CONFIG.sessionKey)
+                localStorage.removeItem(SECURITY_CONFIG.tokenKey)
+                localStorage.removeItem(SECURITY_CONFIG.timestampKey)
+                localStorage.removeItem("authAttempts")
+                localStorage.removeItem("lastAttemptTime")
+            }
+
+            /**
+             * Redirect to login page with security message
+             */
+            function redirectToLogin(reason = "unauthorized") {
+                clearAuthenticationData()
+
+                // Store redirect reason for display on main page
+                sessionStorage.setItem("security_redirect_reason", reason)
+
+                // Show security alert
+                const messages = {
+                    unauthorized:
+                        "Akses tidak sah terdeteksi. Silakan login melalui halaman utama.",
+                    expired: "Sesi Anda telah berakhir. Silakan login kembali.",
+                    invalid:
+                        "Token autentikasi tidak valid. Silakan login kembali.",
+                    direct_access:
+                        "Akses langsung tidak diizinkan. Gunakan tombol Government Portal di halaman utama.",
+                }
+
+                alert(messages[reason] || messages["unauthorized"])
+
+                // Redirect to main page
+                window.location.replace("index.html")
+            }
+
+            /**
+             * Initialize security check on page load
+             */
+            function initializeSecurity() {
+                // Check if user accessed this page directly
+                const referrer = document.referrer
+                const currentHost = window.location.host
+
+                // If no referrer or referrer is not from the same domain, it might be direct access
+                if (!referrer || !referrer.includes(currentHost)) {
+                    console.warn("Security: Potential direct access detected")
+                }
+
+                // Validate authentication
+                if (!validateAuthentication()) {
+                    redirectToLogin("unauthorized")
+                    return false
+                }
+
+                // Update timestamp for session extension
+                localStorage.setItem(
+                    SECURITY_CONFIG.timestampKey,
+                    Date.now().toString()
+                )
+
+                return true
+            }
+
+            /**
+             * Enhanced logout function with security cleanup
+             */
+            function logout() {
+                if (
+                    confirm(
+                        "Apakah Anda yakin ingin keluar dari portal pemerintah?"
+                    )
+                ) {
+                    // Clear all authentication and security data
+                    clearAuthenticationData()
+
+                    // Clear any other sensitive data
+                    sessionStorage.clear()
+
+                    // Redirect back to main dashboard
+                    window.location.replace("index.html")
+                }
+            }
+
+            /**
+             * Session monitoring - check authentication periodically
+             */
+            function startSessionMonitoring() {
+                setInterval(() => {
+                    if (!validateAuthentication()) {
+                        redirectToLogin("expired")
+                    }
+                }, 60000) // Check every minute
+            }
+
+            // ========================================
+            // SECURITY INITIALIZATION
+            // Execute security checks immediately when script loads
+            // ========================================
+
+            // Immediate security check - this runs before DOM is ready
+            if (!initializeSecurity()) {
+                // If security check fails, stop script execution
+                throw new Error("Security validation failed")
+            }
+
+            // Start session monitoring after page loads
+            document.addEventListener("DOMContentLoaded", function () {
+                startSessionMonitoring()
+
+                // Add security event listeners
+                window.addEventListener("beforeunload", function () {
+                    // Optional: Clear sensitive data on page unload
+                    // Uncomment if you want to force re-authentication on every visit
+                    // clearAuthenticationData()
+                })
+
+                // Detect if user tries to access via browser back button without proper auth
+                window.addEventListener("pageshow", function (event) {
+                    if (event.persisted) {
+                        // Page was loaded from cache, re-validate authentication
+                        if (!validateAuthentication()) {
+                            redirectToLogin("invalid")
+                        }
+                    }
                 })
             })
-        })
 
-        // Add some interactive animations
-        document.addEventListener('mousemove', function(e) {
-            const cards = document.querySelectorAll('.card-hover')
-            
-            cards.forEach(card => {
-                const rect = card.getBoundingClientRect()
-                const x = e.clientX - rect.left
-                const y = e.clientY - rect.top
-                
-                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
-                    const centerX = rect.width / 2
-                    const centerY = rect.height / 2
-                    const rotateX = (y - centerY) / 10
-                    const rotateY = (centerX - x) / 10
-                    
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`
-                }
-            })
-        })
+            // Add click handlers for Claude-style service cards
+            document.addEventListener("DOMContentLoaded", function () {
+                const serviceButtons = document.querySelectorAll(
+                    ".claude-card button"
+                )
 
-        document.addEventListener('mouseleave', function() {
-            const cards = document.querySelectorAll('.card-hover')
-            cards.forEach(card => {
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)'
+                serviceButtons.forEach((button) => {
+                    button.addEventListener("click", function () {
+                        const serviceName =
+                            this.closest(".claude-card").querySelector(
+                                "h3"
+                            ).textContent
+                        alert(
+                            `Fitur "${serviceName}" akan segera tersedia.\n\nSilakan hubungi administrator untuk informasi lebih lanjut.`
+                        )
+                    })
+                })
             })
-        })
-    </script>
-</body>
+
+            // Claude-style fade-in animation on page load
+            document.addEventListener("DOMContentLoaded", function () {
+                const cards = document.querySelectorAll(
+                    ".claude-card, .claude-stat-card"
+                )
+
+                cards.forEach((card, index) => {
+                    card.style.opacity = "0"
+                    card.style.transform = "translateY(30px)"
+
+                    setTimeout(() => {
+                        card.style.transition =
+                            "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)"
+                        card.style.opacity = "1"
+                        card.style.transform = "translateY(0)"
+                    }, index * 150)
+                })
+            })
+        </script>
+    </body>
 </html>
