@@ -184,6 +184,25 @@ class DashboardBapenda {
             if (slide) {
                 slide.style.opacity = i === index ? "1" : "0"
                 slide.classList.toggle("active", i === index)
+                
+                // Kontrol pemutaran GIF
+                if (slide.id === 'gifSlide') {
+                    const gifImage = document.getElementById('gifImage');
+                    if (gifImage) {
+                        if (i === index) {
+                            // Putar GIF dengan me-reload sumbernya
+                            const currentSrc = gifImage.src;
+                            gifImage.src = '';
+                            gifImage.src = currentSrc;
+                        } else {
+                            // Hentikan GIF dengan menambahkan #0 untuk menampilkan frame pertama saja
+                            if (!gifImage.src.includes('#0')) {
+                                const originalSrc = gifImage.src.split('#')[0];
+                                gifImage.src = originalSrc + '#0';
+                            }
+                        }
+                    }
+                }
             }
         })
 
