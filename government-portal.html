@@ -347,6 +347,29 @@
                     gap: 16px !important;
                     padding: 0 16px !important;
                 }
+
+                /* Optimize message card layout for mobile */
+                .portal-stats-section .portal-card {
+                    padding: 24px 16px !important;
+                }
+
+                /* Make message card content stack vertically on mobile */
+                .portal-stats-section .portal-card > div[style*="display: flex"] {
+                    flex-direction: column !important;
+                    gap: 16px !important;
+                    text-align: center !important;
+                }
+
+                /* Center the quote icon on mobile */
+                .portal-stats-section .portal-card > div[style*="display: flex"] > div:first-child {
+                    align-self: center !important;
+                }
+
+                /* Center the name container on mobile */
+                .portal-stats-section .portal-card > div[style*="display: flex"] > div:last-child > div:last-child {
+                    justify-content: center !important;
+                    text-align: center !important;
+                }
             }
 
             @media (max-width: 480px) {
@@ -378,6 +401,31 @@
                 .portal-stats-grid {
                     grid-template-columns: 1fr;
                     gap: 16px;
+                }
+
+                /* Further optimize for very small screens */
+                .portal-stats-section {
+                    margin-top: 32px !important;
+                    padding: 24px 0 !important;
+                }
+
+                .portal-stats-section > div {
+                    padding: 0 12px !important;
+                    gap: 12px !important;
+                }
+
+                .portal-stats-section .portal-card {
+                    padding: 20px 12px !important;
+                }
+
+                /* Optimize text sizes for small screens */
+                .portal-stats-section .portal-card h3 {
+                    font-size: 1rem !important;
+                }
+
+                .portal-stats-section .portal-card p {
+                    font-size: 0.875rem !important;
+                    line-height: 1.5 !important;
                 }
             }
         </style>
