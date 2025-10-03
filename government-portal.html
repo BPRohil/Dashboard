@@ -340,6 +340,13 @@
                 .portal-stat-number {
                     font-size: 1.875rem;
                 }
+
+                /* New responsive styles for custom statistics layout */
+                .portal-stats-section > div {
+                    grid-template-columns: 1fr !important;
+                    gap: 16px !important;
+                    padding: 0 16px !important;
+                }
             }
 
             @media (max-width: 480px) {
@@ -414,29 +421,174 @@
 
                 <!-- Portal-style Statistics Section -->
                 <div class="portal-stats-section">
-                    <div class="portal-stats-grid">
-                        <div class="portal-stat-card">
-                            <div class="portal-stat-number">1,234</div>
-                            <div class="portal-stat-label">
-                                Wajib Pajak Aktif
+                    <div
+                        style="
+                            display: grid;
+                            grid-template-columns: 1fr 2fr;
+                            gap: 32px;
+                            padding: 0 32px;
+                        "
+                    >
+                        <!-- Availability Card -->
+                        <div
+                            class="portal-card"
+                            style="
+                                padding: 32px;
+                                text-align: center;
+                                background: #fefcfa;
+                                border: 1px solid #e8e2db;
+                            "
+                        >
+                            <div
+                                style="
+                                    position: relative;
+                                    display: inline-block;
+                                    margin-bottom: 16px;
+                                "
+                            >
+                                <div
+                                    class="service-icon"
+                                    style="
+                                        width: 64px;
+                                        height: 64px;
+                                        margin: 0 auto;
+                                    "
+                                >
+                                    <i
+                                        class="fas fa-user"
+                                        style="
+                                            font-size: 1.5rem;
+                                            color: #92400e;
+                                            text-shadow: 0 1px 2px
+                                                rgba(0, 0, 0, 0.1);
+                                        "
+                                    ></i>
+                                </div>
+                                <!-- Green indicator dot -->
+                                <div
+                                    style="
+                                        position: absolute;
+                                        top: -4px;
+                                        right: -4px;
+                                        width: 16px;
+                                        height: 16px;
+                                        background: #ed0606;
+                                        border: 2px solid #fefcfa;
+                                        border-radius: 50%;
+                                        box-shadow: 0 2px 4px
+                                            rgba(16, 185, 129, 0.3);
+                                    "
+                                ></div>
+                            </div>
+                            <div
+                                style="
+                                    font-size: 1.125rem;
+                                    font-weight: 600;
+                                    color: #1a1a1a;
+                                    margin-bottom: 8px;
+                                "
+                            >
+                                Available
+                            </div>
+                            <div
+                                style="
+                                    font-size: 0.875rem;
+                                    color: #78716c;
+                                    font-weight: 500;
+                                "
+                            >
+                                Status Kepala Badan
                             </div>
                         </div>
-                        <div class="portal-stat-card">
-                            <div class="portal-stat-number">Rp 2.5M</div>
-                            <div class="portal-stat-label">
-                                Pendapatan Bulan Ini
-                            </div>
-                        </div>
-                        <div class="portal-stat-card">
-                            <div class="portal-stat-number">89%</div>
-                            <div class="portal-stat-label">
-                                Tingkat Kepatuhan
-                            </div>
-                        </div>
-                        <div class="portal-stat-card">
-                            <div class="portal-stat-number">156</div>
-                            <div class="portal-stat-label">
-                                Transaksi Hari Ini
+
+                        <!-- Message Card from Head of Regional Revenue Agency -->
+                        <div
+                            class="portal-card"
+                            style="
+                                padding: 32px;
+                                background: #fefcfa;
+                                border: 1px solid #e8e2db;
+                            "
+                        >
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: flex-start;
+                                    gap: 20px;
+                                "
+                            >
+                                <div style="flex-shrink: 0">
+                                    <div
+                                        style="
+                                            width: 56px;
+                                            height: 56px;
+                                            background: linear-gradient(
+                                                135deg,
+                                                #fef3e2 0%,
+                                                #fed7aa 100%
+                                            );
+                                            border: 2px solid #f3e8d0;
+                                            border-radius: 16px;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                        "
+                                    >
+                                        <i
+                                            class="fas fa-quote-left"
+                                            style="
+                                                font-size: 1.25rem;
+                                                color: #d97706;
+                                            "
+                                        ></i>
+                                    </div>
+                                </div>
+                                <div style="flex: 1">
+                                    <h3
+                                        style="
+                                            font-size: 1.125rem;
+                                            font-weight: 600;
+                                            color: #1a1a1a;
+                                            margin-bottom: 12px;
+                                            letter-spacing: -0.01em;
+                                        "
+                                    >
+                                        Pesan Kepala Badan Pendapatan Daerah
+                                    </h3>
+                                    <p
+                                        style="
+                                            font-size: 0.95rem;
+                                            color: #5a5a5a;
+                                            line-height: 1.6;
+                                            margin-bottom: 16px;
+                                            font-style: italic;
+                                        "
+                                    >
+                                        "Dengan semangat pelayanan prima, kami
+                                        berkomitmen untuk terus meningkatkan
+                                        kualitas layanan perpajakan daerah. Mari
+                                        bersama-sama membangun Rokan Hilir yang
+                                        lebih maju melalui kepatuhan pajak yang
+                                        baik."
+                                    </p>
+                                    <div
+                                        style="
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 8px;
+                                        "
+                                    >
+                                        <div
+                                            style="
+                                                font-size: 0.875rem;
+                                                font-weight: 600;
+                                                color: #d97706;
+                                            "
+                                        >
+                                            Drs. H. Ferry Hendra Parya
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
