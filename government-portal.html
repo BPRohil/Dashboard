@@ -20,7 +20,7 @@
             rel="stylesheet"
         />
 
-        <!-- Custom Styles - Claude AI Inspired Design -->
+        <!-- Custom Styles - Government Portal Design -->
         <style>
             * {
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -38,7 +38,7 @@
             }
 
             /* Reference Image Inspired Cards */
-            .claude-card {
+            .portal-card {
                 background: #fefcfa;
                 border: 1px solid #e8e2db;
                 border-radius: 16px;
@@ -47,7 +47,7 @@
                 overflow: hidden;
             }
 
-            .claude-card:hover {
+            .portal-card:hover {
                 border-color: #d97706;
                 box-shadow: 0 8px 25px rgba(217, 119, 6, 0.12);
                 transform: translateY(-2px);
@@ -101,7 +101,7 @@
             }
 
             /* Reference Image Inspired Primary Button */
-            .claude-btn-primary {
+            .portal-btn-primary {
                 background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
                 color: white;
                 border: none;
@@ -122,40 +122,40 @@
                 min-width: 120px;
             }
 
-            .claude-btn-primary:hover {
+            .portal-btn-primary:hover {
                 background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
                 transform: translateY(-1px);
                 box-shadow: 0 4px 16px rgba(217, 119, 6, 0.35);
             }
 
-            .claude-btn-primary:active {
+            .portal-btn-primary:active {
                 transform: translateY(0);
                 box-shadow: 0 2px 8px rgba(217, 119, 6, 0.25);
             }
 
             /* Reference Image Inspired Page Container */
-            .claude-page-container {
+            .portal-page-container {
                 position: relative;
                 min-height: 100vh;
                 background: #f5f3f0;
                 padding: 0;
             }
 
-            /* Claude-style Main Content */
-            .claude-main-content {
+            /* Portal-style Main Content */
+            .portal-main-content {
                 max-width: 1200px;
                 margin: 0 auto;
                 padding: 40px 24px;
             }
 
-            /* Claude-style Welcome Section */
-            .claude-welcome {
+            /* Portal-style Welcome Section */
+            .portal-welcome {
                 text-align: center;
                 margin-bottom: 24px;
                 padding: 0 0;
             }
 
-            .claude-welcome h1 {
+            .portal-welcome h1 {
                 font-size: 2.5rem;
                 font-weight: 700;
                 color: #1a1a1a;
@@ -164,7 +164,7 @@
                 line-height: 1.2;
             }
 
-            .claude-welcome p {
+            .portal-welcome p {
                 font-size: 1.125rem;
                 color: #6b6b6b;
                 max-width: 600px;
@@ -172,7 +172,7 @@
                 line-height: 1.6;
             }
 
-            .claude-icon-container {
+            .portal-icon-container {
                 width: 80px;
                 height: 80px;
                 background: linear-gradient(135deg, #fef3e2 0%, #fed7aa 100%);
@@ -185,16 +185,36 @@
                 box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);
             }
 
-            /* Claude-style Logout Container */
-            .claude-logout-container {
+            /* Portal-style Logout Container */
+            .portal-logout-container {
                 position: absolute;
                 top: 32px;
                 right: 32px;
                 z-index: 1000;
             }
 
+            /* Portal-style Date Time Container */
+            .portal-datetime-container {
+                position: absolute;
+                top: 32px;
+                left: 32px;
+                z-index: 1000;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                    "Roboto", sans-serif;
+                font-size: 12px;
+                font-weight: 600;
+                color: #1a1a1a;
+                letter-spacing: -0.01em;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .portal-datetime-time {
+                color: #d97706;
+                font-weight: 700;
+            }
+
             /* Reference Image Inspired Logout Button */
-            .claude-logout-btn {
+            .portal-logout-btn {
                 background: #fefcfa;
                 color: #78716c;
                 padding: 10px 16px;
@@ -213,7 +233,7 @@
                 letter-spacing: -0.01em;
             }
 
-            .claude-logout-btn:hover {
+            .portal-logout-btn:hover {
                 background: #f5f1eb;
                 border-color: #d6c7b8;
                 color: #57534e;
@@ -221,13 +241,13 @@
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             }
 
-            .claude-logout-btn:active {
+            .portal-logout-btn:active {
                 transform: translateY(0);
                 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
             }
 
-            /* Claude-style Grid Layout */
-            .claude-grid {
+            /* Portal-style Grid Layout */
+            .portal-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
                 gap: 24px;
@@ -235,29 +255,29 @@
             }
 
             /* Reference Image Inspired Statistics Section */
-            .claude-stats-section {
+            .portal-stats-section {
                 margin-top: 32px;
                 margin-bottom: 64px;
-                padding: 48px 0;
+                padding: 12px 0;
                 background: #fefcfa;
                 border-radius: 20px;
                 border: 1px solid #e8e2db;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             }
 
-            .claude-stats-grid {
+            .portal-stats-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 32px;
                 padding: 0 32px;
             }
 
-            .claude-stat-card {
+            .portal-stat-card {
                 text-align: center;
                 padding: 24px 16px;
             }
 
-            .claude-stat-number {
+            .portal-stat-number {
                 font-size: 2.25rem;
                 font-weight: 700;
                 color: #d97706;
@@ -265,7 +285,7 @@
                 letter-spacing: -0.02em;
             }
 
-            .claude-stat-label {
+            .portal-stat-label {
                 font-size: 0.875rem;
                 color: #78716c;
                 font-weight: 500;
@@ -273,70 +293,82 @@
 
             /* Responsive Design */
             @media (max-width: 768px) {
-                .claude-main-content {
+                .portal-main-content {
                     padding: 24px 16px;
                 }
 
-                .claude-logout-container {
+                .portal-logout-container {
                     top: 20px;
                     right: 20px;
                 }
 
-                .claude-welcome h1 {
+                .portal-datetime-container {
+                    top: 20px;
+                    left: 20px;
+                    font-size: 11px;
+                }
+
+                .portal-welcome h1 {
                     font-size: 2rem;
                 }
 
-                .claude-welcome p {
+                .portal-welcome p {
                     font-size: 1rem;
                 }
 
-                .claude-icon-container {
+                .portal-icon-container {
                     width: 64px;
                     height: 64px;
                 }
 
-                .claude-grid {
+                .portal-grid {
                     grid-template-columns: 1fr;
                     gap: 16px;
                 }
 
-                .claude-stats-section {
+                .portal-stats-section {
                     margin-top: 48px;
                     padding: 32px 0;
                 }
 
-                .claude-stats-grid {
+                .portal-stats-grid {
                     grid-template-columns: repeat(2, 1fr);
                     gap: 24px;
                     padding: 0 16px;
                 }
 
-                .claude-stat-number {
+                .portal-stat-number {
                     font-size: 1.875rem;
                 }
             }
 
             @media (max-width: 480px) {
-                .claude-main-content {
+                .portal-main-content {
                     padding: 16px 12px;
                 }
 
-                .claude-logout-container {
+                .portal-logout-container {
                     top: 16px;
                     right: 16px;
                 }
 
-                .claude-logout-btn {
+                .portal-logout-btn {
                     padding: 8px 12px;
                     font-size: 13px;
                     min-width: 80px;
                 }
 
-                .claude-welcome h1 {
+                .portal-datetime-container {
+                    top: 16px;
+                    left: 16px;
+                    font-size: 10px;
+                }
+
+                .portal-welcome h1 {
                     font-size: 1.75rem;
                 }
 
-                .claude-stats-grid {
+                .portal-stats-grid {
                     grid-template-columns: 1fr;
                     gap: 16px;
                 }
@@ -344,11 +376,14 @@
         </style>
     </head>
     <body>
-        <!-- Claude-style Page Container -->
-        <div class="claude-page-container">
-            <!-- Claude-style Logout Button -->
-            <div class="claude-logout-container">
-                <button onclick="logout()" class="claude-logout-btn">
+        <!-- Portal-style Page Container -->
+        <div class="portal-page-container">
+            <!-- Portal-style Date Time Display -->
+            <div class="portal-datetime-container" id="currentDateTime"></div>
+
+            <!-- Portal-style Logout Button -->
+            <div class="portal-logout-container">
+                <button onclick="logout()" class="portal-logout-btn">
                     <i
                         class="fas fa-sign-out-alt"
                         style="margin-right: 8px"
@@ -357,10 +392,10 @@
                 </button>
             </div>
 
-            <!-- Claude-style Main Content -->
-            <main class="claude-main-content">
+            <!-- Portal-style Main Content -->
+            <main class="portal-main-content">
                 <!-- Reference Image Inspired Welcome Section -->
-                <div class="claude-welcome">
+                <div class="portal-welcome">
                     <img
                         src="assets/images/logoBapenda.png"
                         alt="Logo Bapenda"
@@ -372,42 +407,45 @@
                             display: block;
                         "
                     />
+                    <h2>
+                        PORTAL - Badan Pendapatan Daerah Kabupaten Rokan Hilir
+                    </h2>
                 </div>
 
-                <!-- Claude-style Statistics Section -->
-                <div class="claude-stats-section">
-                    <div class="claude-stats-grid">
-                        <div class="claude-stat-card">
-                            <div class="claude-stat-number">1,234</div>
-                            <div class="claude-stat-label">
+                <!-- Portal-style Statistics Section -->
+                <div class="portal-stats-section">
+                    <div class="portal-stats-grid">
+                        <div class="portal-stat-card">
+                            <div class="portal-stat-number">1,234</div>
+                            <div class="portal-stat-label">
                                 Wajib Pajak Aktif
                             </div>
                         </div>
-                        <div class="claude-stat-card">
-                            <div class="claude-stat-number">Rp 2.5M</div>
-                            <div class="claude-stat-label">
+                        <div class="portal-stat-card">
+                            <div class="portal-stat-number">Rp 2.5M</div>
+                            <div class="portal-stat-label">
                                 Pendapatan Bulan Ini
                             </div>
                         </div>
-                        <div class="claude-stat-card">
-                            <div class="claude-stat-number">89%</div>
-                            <div class="claude-stat-label">
+                        <div class="portal-stat-card">
+                            <div class="portal-stat-number">89%</div>
+                            <div class="portal-stat-label">
                                 Tingkat Kepatuhan
                             </div>
                         </div>
-                        <div class="claude-stat-card">
-                            <div class="claude-stat-number">156</div>
-                            <div class="claude-stat-label">
+                        <div class="portal-stat-card">
+                            <div class="portal-stat-number">156</div>
+                            <div class="portal-stat-label">
                                 Transaksi Hari Ini
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Claude-style Service Cards Grid -->
-                <div class="claude-grid">
+                <!-- Portal-style Service Cards Grid -->
+                <div class="portal-grid">
                     <!-- Tax Management -->
-                    <div class="claude-card" style="padding: 32px">
+                    <div class="portal-card" style="padding: 32px">
                         <div style="text-align: center">
                             <div class="service-icon">
                                 <i
@@ -431,7 +469,7 @@
                             >
                                 Manajemen Pajak
                             </h3>
-                            <button class="claude-btn-primary">
+                            <button class="portal-btn-primary">
                                 Akses
                                 <i
                                     class="fas fa-arrow-right"
@@ -442,7 +480,7 @@
                     </div>
 
                     <!-- Revenue Reports -->
-                    <div class="claude-card" style="padding: 32px">
+                    <div class="portal-card" style="padding: 32px">
                         <div style="text-align: center">
                             <div class="service-icon">
                                 <i
@@ -466,7 +504,7 @@
                             >
                                 Laporan Pendapatan
                             </h3>
-                            <button class="claude-btn-primary">
+                            <button class="portal-btn-primary">
                                 Akses
                                 <i
                                     class="fas fa-arrow-right"
@@ -477,7 +515,7 @@
                     </div>
 
                     <!-- Taxpayer Database -->
-                    <div class="claude-card" style="padding: 32px">
+                    <div class="portal-card" style="padding: 32px">
                         <div style="text-align: center">
                             <div class="service-icon">
                                 <i
@@ -501,7 +539,7 @@
                             >
                                 Database Wajib Pajak
                             </h3>
-                            <button class="claude-btn-primary">
+                            <button class="portal-btn-primary">
                                 Akses
                                 <i
                                     class="fas fa-arrow-right"
@@ -512,7 +550,7 @@
                     </div>
 
                     <!-- Document Management -->
-                    <div class="claude-card" style="padding: 32px">
+                    <div class="portal-card" style="padding: 32px">
                         <div style="text-align: center">
                             <div class="service-icon">
                                 <i
@@ -536,7 +574,7 @@
                             >
                                 Manajemen Dokumen
                             </h3>
-                            <button class="claude-btn-primary">
+                            <button class="portal-btn-primary">
                                 Akses
                                 <i
                                     class="fas fa-arrow-right"
@@ -547,7 +585,7 @@
                     </div>
 
                     <!-- Settings -->
-                    <div class="claude-card" style="padding: 32px">
+                    <div class="portal-card" style="padding: 32px">
                         <div style="text-align: center">
                             <div class="service-icon">
                                 <i
@@ -571,7 +609,7 @@
                             >
                                 Pengaturan Sistem
                             </h3>
-                            <button class="claude-btn-primary">
+                            <button class="portal-btn-primary">
                                 Akses
                                 <i
                                     class="fas fa-arrow-right"
@@ -582,7 +620,7 @@
                     </div>
 
                     <!-- Help & Support -->
-                    <div class="claude-card" style="padding: 32px">
+                    <div class="portal-card" style="padding: 32px">
                         <div style="text-align: center">
                             <div class="service-icon">
                                 <i
@@ -606,7 +644,7 @@
                             >
                                 Bantuan & Dukungan
                             </h3>
-                            <button class="claude-btn-primary">
+                            <button class="portal-btn-primary">
                                 Akses
                                 <i
                                     class="fas fa-arrow-right"
@@ -622,16 +660,13 @@
             <div
                 style="
                     text-align: center;
-                    margin-top: 80px;
+                    margin-top: 20px;
                     padding: 32px 0;
                     color: #78716c;
                     font-size: 0.875rem;
                 "
             >
-                <p>
-                    © 2025 Badan Pendapatan Daerah Rokan Hilir. Semua hak
-                    dilindungi.
-                </p>
+                <p>© 2025 Badan Pendapatan Daerah Rokan Hilir.</p>
             </div>
         </div>
         <!-- End of page-container -->
@@ -841,8 +876,62 @@
                 throw new Error("Security validation failed")
             }
 
+            /**
+             * Update date and time display
+             */
+            function updateDateTime() {
+                const now = new Date()
+
+                // Format time (HH:MM)
+                const timeOptions = {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                }
+                const formattedTime = now.toLocaleTimeString(
+                    "id-ID",
+                    timeOptions
+                )
+
+                // Format date (DD Month YYYY) without weekday
+                const dateOptions = {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                }
+                const formattedDate = now.toLocaleDateString(
+                    "id-ID",
+                    dateOptions
+                )
+
+                // Combine time and date with comma separator
+                const combinedDateTime = `<span class="portal-datetime-time">${formattedTime}</span> , ${formattedDate}`
+
+                // Update DOM element
+                const dateTimeElement =
+                    document.getElementById("currentDateTime")
+
+                if (dateTimeElement) {
+                    dateTimeElement.innerHTML = combinedDateTime
+                }
+            }
+
+            /**
+             * Initialize date time display
+             */
+            function initializeDateTime() {
+                // Update immediately
+                updateDateTime()
+
+                // Update every second
+                setInterval(updateDateTime, 1000)
+            }
+
             // Start session monitoring after page loads
             document.addEventListener("DOMContentLoaded", function () {
+                // Initialize date time display
+                initializeDateTime()
+
                 startSessionMonitoring()
 
                 // Add security event listeners
@@ -863,16 +952,16 @@
                 })
             })
 
-            // Add click handlers for Claude-style service cards
+            // Add click handlers for Portal-style service cards
             document.addEventListener("DOMContentLoaded", function () {
                 const serviceButtons = document.querySelectorAll(
-                    ".claude-card button"
+                    ".portal-card button"
                 )
 
                 serviceButtons.forEach((button) => {
                     button.addEventListener("click", function () {
                         const serviceName =
-                            this.closest(".claude-card").querySelector(
+                            this.closest(".portal-card").querySelector(
                                 "h3"
                             ).textContent
                         alert(
@@ -882,10 +971,10 @@
                 })
             })
 
-            // Claude-style fade-in animation on page load
+            // Portal-style fade-in animation on page load
             document.addEventListener("DOMContentLoaded", function () {
                 const cards = document.querySelectorAll(
-                    ".claude-card, .claude-stat-card"
+                    ".portal-card, .portal-stat-card"
                 )
 
                 cards.forEach((card, index) => {
