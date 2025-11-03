@@ -20,27 +20,27 @@ const BAPENDA_TICKER_MESSAGES = {
     financial: [
         {
             icon: "",
-            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Realisasi Pendapatan Asli Daerah (1 Januari 2025 s/d 22 Oktober 2025)</span></span>',
+            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Realisasi Pendapatan Asli Daerah (1 Januari 2025 s/d 31 Oktober 2025)</span></span>',
             category: "revenue",
         },
         {
             icon: "",
-            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Total Pendapatan Pajak: 112,52 Miliar</span></span>',
+            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Total Pendapatan Pajak:   115 Miliar</span></span>',
             category: "revenue",
         },
         {
             icon: "",
-            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">PBB-P2: 9,5 Miliar | BPHTB: 5,7 Miliar</span></span>',
+            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">PBB-P2: 9,9 Miliar | BPHTB: 5,8 Miliar</span></span>',
             category: "revenue",
         },
         {
             icon: "",
-            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">PBJT Makan atau Minum: 4,1 Miliar | PBJT Tenaga Listrik: 35,12 Miliar | PBJT Perhotelan: 1,4 Miliar | PBJT Parkir: 664 Juta | PBJT Kesenian dan Hiburan: 1,08 Miliar | Reklame: 1,03 Miliar | Air Tanah: 906 Juta | Sarang Burung Walet: 50 Juta | MBLB: 2,39 Miliar</span></span>',
+            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">PBJT Makan atau Minum: 4,2 Miliar | PBJT Tenaga Listrik: 35,1 Miliar | PBJT Perhotelan: 1,4 Miliar | PBJT Parkir: 670 Juta | PBJT Kesenian dan Hiburan: 1,08 Miliar | Reklame: 1,08 Miliar | Air Tanah: 997 Juta | Sarang Burung Walet: 52 Juta | MBLB: 2,4 Miliar</span></span>',
             category: "revenue",
         },
         {
             icon: "",
-            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Opsen PKB: 27,10 Miliar | Opsen BBNKB: 23,32 Miliar</span></span>',
+            text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Opsen PKB: 27,9 Miliar | Opsen BBNKB: 24,4 Miliar</span></span>',
             category: "revenue",
         },
         // {
