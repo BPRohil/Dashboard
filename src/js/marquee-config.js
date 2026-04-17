@@ -20,7 +20,7 @@ const BAPENDA_TICKER_MESSAGES = {
   financial: [
     {
       icon: "",
-      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Realisasi Pendapatan Asli Daerah (1 Januari 2025 s/d 31 Maret 2025)</span></span>',
+      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Realisasi Pendapatan Asli Daerah (1 Januari 2026 s/d 31 Maret 2026)</span></span>',
       category: "revenue",
     },
     {
