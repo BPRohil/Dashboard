@@ -20,27 +20,27 @@ const BAPENDA_TICKER_MESSAGES = {
   financial: [
     {
       icon: "",
-      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Realisasi Pendapatan Asli Daerah (1 Januari 2026 s/d 31 Maret 2026)</span></span>',
+      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Realisasi Pendapatan Asli Daerah (1 Januari 2026 s/d 30 April 2026)</span></span>',
       category: "revenue",
     },
     {
       icon: "",
-      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Total Pendapatan Pajak:   32 Miliar</span></span>',
+      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Total Pendapatan Pajak: 43,54 Miliar</span></span>',
       category: "revenue",
     },
     {
       icon: "",
-      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">PBB-P2: 221 Juta | BPHTB: 761 Juta</span></span>',
+      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">PBB-P2: 512 Juta | BPHTB: 1,07 Miliar</span></span>',
       category: "revenue",
     },
     {
       icon: "",
-      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">PBJT Makan atau Minum: 1,5 Miliar | PBJT Tenaga Listrik: 11,5 Miliar | PBJT Perhotelan: 378 Juta | PBJT Parkir: 209 Juta | PBJT Kesenian dan Hiburan: 248 Juta | Reklame: 284 Juta | Air Tanah: 361 Juta | Sarang Burung Walet: 6,7 Juta | MBLB: 408 Juta</span></span>',
+      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">PBJT Makan atau Minum: 1,98 Miliar | PBJT Tenaga Listrik: 15,34 Miliar | PBJT Perhotelan: 552 Juta | PBJT Parkir: 282 Juta | PBJT Kesenian dan Hiburan: 494 Juta | Reklame: 514 Juta | Air Tanah: 482 Juta | Sarang Burung Walet: 10,7 Juta | MBLB: 549 Juta</span></span>',
       category: "revenue",
     },
     {
       icon: "",
-      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Opsen PKB: 7,9 Miliar | Opsen BBNKB: 8,1 Miliar</span></span>',
+      text: '<span class="inline-flex items-center space-x-2"><span class="text-slate-900 font-bold">Opsen PKB: 10,87 Miliar | Opsen BBNKB: 10,87 Miliar</span></span>',
       category: "revenue",
     },
     // {
